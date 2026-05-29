@@ -3,8 +3,8 @@
 > ⚠️ **Linear sync pending (for the account with the Linear MCP):** This machine has no Linear MCP connected, so the tracker wasn't updated this session. To sync: create/update the Cassola Phase 1 issue — Home ✅ and Scenario intro ✅ done; Practice screen, walking-in content wiring, and mobile-deploy check still open. Also reflect the decision that Phase 1 Practice is conversational multiple-choice, not card-based.
 
 ## Last session — 2026-05-29
-- What we built: Scenario intro screen (faithful CassolaScenario port + en Caçó filling the space above a pinned CTA) and a lightweight Home↔Scenario screen-state router
-- Where we stopped: Scenario intro is live and navigable from Home (tap any scenario row → intro → back). Per-scenario content not yet wired — every row shows walking-in content + hardcoded "ESCENA 01". Practice screen not started.
+- What we built: Scenario intro screen (faithful CassolaScenario port + en Caçó filling the space above a pinned CTA) and a lightweight Home↔Scenario screen-state router. Then a full identity pass — rich link-preview card (OG + Twitter meta + 1200×630 og.png) and the Caçó favicon set (svg + 32px + 180px apple-touch), all live on cassola.xyz; og.html/icon.html kept as regen sources but .vercelignore'd.
+- Where we stopped: Scenario intro is live and navigable from Home (tap any scenario row → intro → back). Per-scenario content not yet wired — every row shows walking-in content + hardcoded "ESCENA 01". Practice screen not started. Link previews + favicon done and verified live.
 - Next action: build the Practice screen — lift CassolaPractice (waiter line → 3 tagged responses → "Comprova"), wired behind the scenario's "COMENÇA, VINGA" CTA
 
 ## Goal
@@ -48,4 +48,5 @@ Acceptance criteria: something you can stick on a wall.
 - 2026-05-29: Plain HTML + React via CDN, no build step. Reason: no bundler overhead for a static phrase app at this stage.
 - 2026-05-29: Design system fully specced (Cassola brand) before first line of app code. Reason: design handover from Claude Design already complete.
 - 2026-05-29: Domain cassola.xyz added to Vercel. Every push to main auto-deploys.
+- 2026-05-29: Identity pass once the page was live — OG/Twitter link-preview card + Caçó favicon, both from the existing brand. PNG og.png (WhatsApp/iMessage need raster), full-bleed favicon PNGs (iOS blackens transparent corners), og.html/icon.html .vercelignore'd. Captured as the reusable /s-identity command for future projects.
 - 2026-05-29: Sticker and CassolaMascot components lifted directly from design canvas — no changes needed.
