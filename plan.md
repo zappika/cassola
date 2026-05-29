@@ -11,7 +11,7 @@ A Catalan-only restaurant phrase app for Barcelona expats. Covers the full arc o
 ## Phase 1: Something you can actually use
 - [x] Home screen — greeting, full-flow CTA ("Mode complet"), scenario list
 - [ ] Scenario intro screen — cover card, variant list, "Som-hi" CTA
-- [ ] Practice screen — card-based, flip through phrases for one scenario
+- [ ] Practice screen — conversational multiple-choice (waiter line → tagged responses → "Comprova")
 - [ ] Phrase content wired in for "Walking in" scenario (the entry point)
 - [ ] Deploys cleanly on mobile, fonts and colors correct
 
@@ -42,6 +42,7 @@ Acceptance criteria: something you can stick on a wall.
 
 ## Decision log
 - 2026-05-29: Card-based mechanic for Phase 1 (not conversational). Reason: fastest path to something testable. Revisit after real usage.
+- 2026-05-29 (revised): Phase 1 Practice screen is the conversational multiple-choice mechanic, not card-based flip-through. Reason: the only practice screen actually in the design canvas (CassolaPractice) is the multiple-choice one — lifting it is the fastest path to something real, and reacting to it answers the "does this model feel right" question just as well. Conversational pulled forward from Phase 3.
 - 2026-05-29: Plain HTML + React via CDN, no build step. Reason: no bundler overhead for a static phrase app at this stage.
 - 2026-05-29: Design system fully specced (Cassola brand) before first line of app code. Reason: design handover from Claude Design already complete.
 - 2026-05-29: Domain cassola.xyz added to Vercel. Every push to main auto-deploys.
