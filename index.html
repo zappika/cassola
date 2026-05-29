@@ -2,12 +2,19 @@
 <html lang="ca">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cassola — Català que cou a foc lent.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Cassola</title>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;800&family=Newsreader:ital,wght@1,400;1,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #FFD23F; font-family: 'Space Grotesk', sans-serif; min-height: 100vh; }
+    html, body { height: 100%; }
+    body {
+      background: #FFD23F;
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      min-height: 100%;
+      -webkit-font-smoothing: antialiased;
+    }
+    button { cursor: pointer; font-family: inherit; }
   </style>
 </head>
 <body>
@@ -16,21 +23,169 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script type="text/babel">
-    function App() {
+    const C = {
+      yellow:    '#FFD23F',
+      yellowDeep:'#E9B91A',
+      red:       '#E83A2F',
+      ink:       '#141210',
+      cream:     '#FFF6E0',
+      green:     '#1F8A52',
+      blue:      '#2840B5',
+      muted:     '#6E6557',
+    };
+
+    function CassolaMascot({ size = 130, expression = 'happy' }) {
       return (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', flexDirection: 'column', gap: 16 }}>
-          <h1 style={{ fontFamily: 'Space Grotesk', fontWeight: 800, fontSize: 48, color: '#141210', letterSpacing: -2 }}>
-            Cassola
-          </h1>
-          <p style={{ fontFamily: 'Newsreader', fontStyle: 'italic', fontSize: 18, color: '#141210' }}>
-            Català que cou a foc lent.
-          </p>
+        <svg viewBox="0 0 140 130" width={size} height={size * (130/140)}>
+          <g transform="translate(4,4)">
+            <path d="M20 38 L 120 38 L 110 110 Q 70 122 30 110 Z" fill={C.ink}/>
+            <ellipse cx="70" cy="38" rx="50" ry="10" fill={C.ink}/>
+          </g>
+          <path d="M20 38 L 120 38 L 110 110 Q 70 122 30 110 Z" fill={C.red} stroke={C.ink} strokeWidth="4" strokeLinejoin="round"/>
+          <ellipse cx="70" cy="38" rx="50" ry="10" fill={C.red} stroke={C.ink} strokeWidth="4"/>
+          <ellipse cx="70" cy="35" rx="46" ry="6" fill={C.ink} opacity="0.25"/>
+          <ellipse cx="14" cy="60" rx="6" ry="14" fill={C.red} stroke={C.ink} strokeWidth="4"/>
+          <ellipse cx="126" cy="60" rx="6" ry="14" fill={C.red} stroke={C.ink} strokeWidth="4"/>
+          <circle cx="55" cy="68" r="9" fill={C.cream} stroke={C.ink} strokeWidth="3"/>
+          <circle cx="85" cy="68" r="9" fill={C.cream} stroke={C.ink} strokeWidth="3"/>
+          <circle cx="56" cy="70" r="4" fill={C.ink}/>
+          <circle cx="86" cy="70" r="4" fill={C.ink}/>
+          <circle cx="57" cy="68" r="1.5" fill={C.cream}/>
+          <circle cx="87" cy="68" r="1.5" fill={C.cream}/>
+          {expression === 'happy' && <path d="M52 88 Q 70 102 88 88" stroke={C.ink} strokeWidth="4" fill="none" strokeLinecap="round"/>}
+          {expression === 'oh'    && <ellipse cx="70" cy="92" rx="7" ry="9" fill={C.ink}/>}
+          <circle cx="40" cy="88" r="4" fill={C.yellow} opacity="0.9"/>
+          <circle cx="100" cy="88" r="4" fill={C.yellow} opacity="0.9"/>
+          <path d="M55 22 Q 50 14 58 8" stroke={C.ink} strokeWidth="3" fill="none" strokeLinecap="round"/>
+          <path d="M70 18 Q 65 10 73 4" stroke={C.ink} strokeWidth="3" fill="none" strokeLinecap="round"/>
+          <path d="M85 22 Q 80 14 88 8" stroke={C.ink} strokeWidth="3" fill="none" strokeLinecap="round"/>
+        </svg>
+      );
+    }
+
+    function Sticker({ children, bg = C.red, color = C.cream, rot = -3, size = 13, style = {} }) {
+      return (
+        <span style={{
+          display: 'inline-block', background: bg, color,
+          padding: '6px 12px',
+          border: `2.5px solid ${C.ink}`,
+          borderRadius: 8, fontWeight: 800, fontSize: size,
+          transform: `rotate(${rot}deg)`,
+          boxShadow: `3px 3px 0 ${C.ink}`,
+          fontFamily: "'IBM Plex Mono', monospace",
+          letterSpacing: 0.5,
+          lineHeight: 1,
+          whiteSpace: 'nowrap',
+          ...style,
+        }}>{children}</span>
+      );
+    }
+
+    const SCENARIOS = [
+      { ca: 'Entrant al restaurant', en: 'walking in',  step: '0/10', color: C.red,  rot: -1.5 },
+      { ca: 'Reservar per telèfon',  en: 'booking',     step: '0/8',  color: C.blue, rot:  1   },
+      { ca: 'Demanant la carta',     en: 'menu',        step: '0/12', color: C.green,rot: -1   },
+      { ca: 'Demanant el compte',    en: 'check',       step: '0/6',  color: C.ink,  rot:  1.5 },
+    ];
+
+    function getDayLabel() {
+      const days = ['DIUMENGE','DILLUNS','DIMARTS','DIMECRES','DIJOUS','DIVENDRES','DISSABTE'];
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2,'0');
+      const mm = String(now.getMinutes()).padStart(2,'0');
+      return `${days[now.getDay()]} · ${hh}:${mm}`;
+    }
+
+    function HomeScreen() {
+      return (
+        <div style={{
+          maxWidth: 430,
+          margin: '0 auto',
+          minHeight: '100vh',
+          background: C.yellow,
+          padding: '54px 22px 40px',
+          color: C.ink,
+          position: 'relative',
+        }}>
+          {/* header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 14 }}>
+            <div>
+              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 1.2, textTransform: 'uppercase', fontWeight: 700 }}>
+                {getDayLabel()}
+              </div>
+              <div style={{ fontWeight: 800, fontSize: 32, lineHeight: 0.95, marginTop: 4, letterSpacing: -1, transform: 'rotate(-1deg)', transformOrigin: 'left' }}>
+                HOLA<br/>NOIA!
+              </div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-end' }}>
+              <Sticker bg={C.red} rot={4} size={11}>♥ ♥ ♥</Sticker>
+              <Sticker bg={C.cream} color={C.ink} rot={-3} size={11}>5 DIES</Sticker>
+            </div>
+          </div>
+
+          {/* full-flow card */}
+          <div style={{
+            background: C.red, color: C.cream,
+            border: `2.5px solid ${C.ink}`,
+            borderRadius: 16, padding: 16, marginBottom: 16,
+            boxShadow: `5px 5px 0 ${C.ink}`,
+            position: 'relative', overflow: 'hidden',
+          }}>
+            <div style={{ position: 'absolute', right: -14, bottom: -16, opacity: 0.98 }}>
+              <CassolaMascot size={120}/>
+            </div>
+            <Sticker bg={C.yellow} color={C.ink} rot={-3} size={10} style={{ boxShadow: `2px 2px 0 ${C.ink}` }}>
+              MODE COMPLET
+            </Sticker>
+            <div style={{ fontWeight: 800, fontSize: 26, lineHeight: 0.95, marginTop: 10, maxWidth: 190, letterSpacing: -0.8 }}>
+              UN SOPAR DE CAP A PEUS
+            </div>
+            <div style={{ fontSize: 12, opacity: 0.95, marginTop: 8, maxWidth: 180, lineHeight: 1.4 }}>
+              Reserva, entrar, demanar, pagar. Amb curveballs.
+            </div>
+            <button style={{
+              marginTop: 12,
+              background: C.yellow, color: C.ink,
+              border: `2.5px solid ${C.ink}`,
+              borderRadius: 8, padding: '8px 14px',
+              fontSize: 13, fontWeight: 800,
+              boxShadow: `3px 3px 0 ${C.ink}`,
+            }}>
+              SOM-HI! →
+            </button>
+          </div>
+
+          {/* scenario list */}
+          <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 10, fontWeight: 700 }}>
+            O TRIA UNA ESCENA
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {SCENARIOS.map((s, i) => (
+              <div key={i} style={{
+                background: C.cream,
+                border: `2.5px solid ${C.ink}`,
+                borderRadius: 12, padding: '10px 12px',
+                display: 'flex', alignItems: 'center', gap: 12,
+                boxShadow: `3px 3px 0 ${C.ink}`,
+                transform: `rotate(${s.rot * 0.4}deg)`,
+              }}>
+                <div style={{ width: 36, height: 36, borderRadius: 8, background: s.color, border: `2.5px solid ${C.ink}`, flexShrink: 0 }}/>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 14, fontWeight: 800 }}>{s.ca}</div>
+                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: C.muted, textTransform: 'uppercase', letterSpacing: 0.8 }}>
+                    {s.en} · {s.step}
+                  </div>
+                </div>
+                <div style={{ fontWeight: 800, fontSize: 18 }}>→</div>
+              </div>
+            ))}
+          </div>
         </div>
       );
     }
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
+    root.render(<HomeScreen />);
   </script>
 </body>
 </html>
