@@ -1,0 +1,5 @@
+# Brand-asset regen sources — kept in the repo, not served publicly.
+# og.png / favicon.svg / favicon-32.png / apple-touch-icon.png are generated
+# from these and ARE deployed; the HTML sources themselves don't need to be.
+og.html
+icon.html
