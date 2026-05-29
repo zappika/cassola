@@ -1,16 +1,18 @@
 # Plan: Cassola
 
+> ⚠️ **Linear sync pending (for the account with the Linear MCP):** This machine has no Linear MCP connected, so the tracker wasn't updated this session. To sync: create/update the Cassola Phase 1 issue — Home ✅ and Scenario intro ✅ done; Practice screen, walking-in content wiring, and mobile-deploy check still open. Also reflect the decision that Phase 1 Practice is conversational multiple-choice, not card-based.
+
 ## Last session — 2026-05-29
-- What we built: full bootstrap (GitHub repo, Vercel deploy, cassola.xyz domain) + Home screen matching design canvas exactly
-- Where we stopped: Home screen live at cassola.xyz, sub-chunk 1 of Phase 1 complete
-- Next action: build sub-chunk 2 — Scenario intro screen
+- What we built: Scenario intro screen (faithful CassolaScenario port + en Caçó filling the space above a pinned CTA) and a lightweight Home↔Scenario screen-state router
+- Where we stopped: Scenario intro is live and navigable from Home (tap any scenario row → intro → back). Per-scenario content not yet wired — every row shows walking-in content + hardcoded "ESCENA 01". Practice screen not started.
+- Next action: build the Practice screen — lift CassolaPractice (waiter line → 3 tagged responses → "Comprova"), wired behind the scenario's "COMENÇA, VINGA" CTA
 
 ## Goal
 A Catalan-only restaurant phrase app for Barcelona expats. Covers the full arc of a meal — walking in, ordering, paying, leaving. The first version uses a card-based mechanic (flip through phrases for the situation) to get something real in front of people and answer whether that model feels right or wants to be conversational instead. Should feel right on a phone, opened standing outside a bar.
 
 ## Phase 1: Something you can actually use
 - [x] Home screen — greeting, full-flow CTA ("Mode complet"), scenario list
-- [ ] Scenario intro screen — cover card, variant list, "Som-hi" CTA
+- [x] Scenario intro screen — cover card, variant list, "Som-hi" CTA
 - [ ] Practice screen — conversational multiple-choice (waiter line → tagged responses → "Comprova")
 - [ ] Phrase content wired in for "Walking in" scenario (the entry point)
 - [ ] Deploys cleanly on mobile, fonts and colors correct
