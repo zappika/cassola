@@ -1,7 +1,5 @@
 # Plan: Cassola
 
-> ⚠️ **Linear sync pending (for the account with the Linear MCP):** This machine has no Linear MCP connected, so the tracker wasn't updated this session. To sync: create/update the Cassola Phase 1 issue — Home ✅ and Scenario intro ✅ done; Practice screen, walking-in content wiring, and mobile-deploy check still open. Also reflect the decision that Phase 1 Practice is conversational multiple-choice, not card-based.
-
 ## Last session — 2026-05-29
 - What we built: Scenario intro screen (faithful CassolaScenario port + en Caçó filling the space above a pinned CTA) and a lightweight Home↔Scenario screen-state router. Then a full identity pass — rich link-preview card (OG + Twitter meta + 1200×630 og.png) and the Caçó favicon set (svg + 32px + 180px apple-touch), all live on cassola.xyz; og.html/icon.html kept as regen sources but .vercelignore'd.
 - Where we stopped: Scenario intro is live and navigable from Home (tap any scenario row → intro → back). Per-scenario content not yet wired — every row shows walking-in content + hardcoded "ESCENA 01". Practice screen not started. Link previews + favicon done and verified live.
