@@ -5,7 +5,7 @@ A Catalan-only restaurant language app for expats in Barcelona. Learn exactly wh
 ## Stack
 - Frontend: Plain HTML + React (JSX via Babel CDN, no build step)
 - Data: JSON files (scenarios, phrases, variants)
-- Deploy: Vercel, connected to GitHub at https://github.com/zappika/cassola
+- Deploy: Vercel, connected to GitHub at https://github.com/zappika/cassola — live at https://cassola.xyz
 
 ## Brand
 - Name: Cassola / Tagline: "Català que cou a foc lent."
