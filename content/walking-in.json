@@ -1,0 +1,37 @@
+{
+  "id": "walking-in",
+  "ca": "Entrant al restaurant",
+  "en": "walking in",
+  "steps": [
+    {
+      "waiter": { "ca": "Bona nit, teniu reserva?", "en": "good evening, do you have a reservation?", "audio": "" },
+      "reply": { "ca": "Perfecte, acompanyeu-me.", "en": "perfect, follow me." },
+      "hack": "Curt = català. Nom i quants sou, prou. No t’excusis ni allarguis.",
+      "options": [
+        { "t": "Sí, a nom de Martí, per dos.", "tone": "NATURAL", "correct": true, "note": "Nom + quants sou. Just el que necessiten, ni una paraula més.", "audio": "" },
+        { "t": "Tinc una taula reservada.", "tone": "LITERAL", "correct": false, "note": "“Taula” és el moble; el que has fet és una “reserva”. Digues “Tinc reserva”." },
+        { "t": "Voldria confirmar la meva reserva, si us plau.", "tone": "MASSA FORMAL", "correct": false, "note": "Ningú parla així entrant a un bar. Curt = nadiu." }
+      ]
+    },
+    {
+      "waiter": { "ca": "Teniu reserva?", "en": "do you have a reservation?", "audio": "" },
+      "reply": { "ca": "Per dos? Sí, passeu.", "en": "for two? sure, come in." },
+      "hack": "“Teniu lloc?” és LA frase. Curta i directa, sense embuts.",
+      "options": [
+        { "t": "No, però teniu lloc per dos?", "tone": "NATURAL", "correct": true, "note": "“Teniu lloc?” és exactament el que diu un d’aquí. Directe i amable.", "audio": "" },
+        { "t": "No tenim reserva. Hi hauria alguna taula disponible, si us plau?", "tone": "MASSA FORMAL", "correct": false, "note": "S’entén, però és llarg. “Teniu lloc?” fa la mateixa feina en tres paraules." },
+        { "t": "Volem menjar aquí ara.", "tone": "MASSA SEC", "correct": false, "note": "Sona a ordre. Pregunta, no anunciïs: “Teniu lloc?”." }
+      ]
+    },
+    {
+      "waiter": { "ca": "Feu una mica tard, eh?", "en": "running a bit late, eh?", "audio": "" },
+      "reply": { "ca": "Tranquils, encara la teniu. Passeu.", "en": "no worries, it’s still yours. come in." },
+      "hack": "Un “perdó” i avant. Excusar-te massa et delata com a turista.",
+      "options": [
+        { "t": "Sí, perdó! Encara teniu la taula?", "tone": "NATURAL", "correct": true, "note": "Reconeixes i preguntes. Càlid i ràpid, sense drama.", "audio": "" },
+        { "t": "El trànsit estava fatal, ho sento moltíssim, de veritat.", "tone": "T’EXCUSES MASSA", "correct": false, "note": "Amb un “perdó” n’hi ha prou. Excusar-se de més és molt de fora." },
+        { "t": "Tinc reserva, la taula és meva.", "tone": "A LA DEFENSIVA", "correct": false, "note": "No et posis a la defensiva: ningú t’està acusant de res." }
+      ]
+    }
+  ]
+}
