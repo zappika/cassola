@@ -1,0 +1,5 @@
+{
+  "rewrites": [{"source": "/review", "destination": "/review/index.html"}],
+  "functions": {"api/reviews.js": {"includeFiles": "{content/walking-in.v2.json,tests/fixtures/walking-in.v2.answers.json}"}},
+  "headers": [{"source": "/review(.*)", "headers": [{"key": "X-Robots-Tag", "value": "noindex, nofollow"}, {"key":"Referrer-Policy","value":"no-referrer"}]}]
+}

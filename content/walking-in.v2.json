@@ -1,0 +1,1485 @@
+{
+  "schema_version": 2,
+  "content_version": "2.0.0-draft.1",
+  "id": "walking-in",
+  "title": {
+    "ca": "Entrant al restaurant",
+    "en": "Walking in"
+  },
+  "review": {
+    "status": "awaiting_native_review",
+    "reviewer": null,
+    "reviewed_at": null
+  },
+  "review_scope": "All Catalan, translations, examples, feedback, branch logic and future recordings; nested records inherit this status.",
+  "estimated_minutes": [
+    8,
+    12
+  ],
+  "help_policy": {
+    "english_default": "hidden",
+    "context_translation_counts_as_assistance": false,
+    "staff_translation_counts_as_assistance": true,
+    "hints_and_models_count_as_assistance": true,
+    "replay_and_repeat_count_as_assistance": false,
+    "accessible_staff_transcript_counts_as_assistance": false
+  },
+  "situations": [
+    {
+      "id": "booked",
+      "context": {
+        "ca": "Sou dues persones. Teniu reserva a nom de Martí i arribeu a l’hora.",
+        "en": "You are two diners, arriving on time with a booking under Martí."
+      },
+      "facts": {
+        "reservation": true,
+        "party_size": 2,
+        "party_size_word": "dos",
+        "name": "Martí",
+        "minutes_late": 0
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "walk-in",
+      "context": {
+        "ca": "Sou dues persones i entreu al restaurant sense reserva.",
+        "en": "You are two diners walking into the restaurant without a booking."
+      },
+      "facts": {
+        "reservation": false,
+        "party_size": 2,
+        "party_size_word": "dos",
+        "name": null,
+        "minutes_late": 0
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "late",
+      "context": {
+        "ca": "Sou dues persones. Teniu reserva a nom de Martí i arribeu quinze minuts tard.",
+        "en": "You are two diners with a booking under Martí, arriving fifteen minutes late."
+      },
+      "facts": {
+        "reservation": true,
+        "party_size": 2,
+        "party_size_word": "dos",
+        "name": "Martí",
+        "minutes_late": 15
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "final-booked",
+      "context": {
+        "ca": "Sou tres persones. Teniu reserva a nom de Laia i arribeu a l’hora.",
+        "en": "You are three diners, arriving on time with a booking under Laia."
+      },
+      "facts": {
+        "reservation": true,
+        "party_size": 3,
+        "party_size_word": "tres",
+        "name": "Laia",
+        "minutes_late": 0
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "final-walk-in",
+      "context": {
+        "ca": "Sou tres persones i no teniu reserva.",
+        "en": "You are three diners without a booking."
+      },
+      "facts": {
+        "reservation": false,
+        "party_size": 3,
+        "party_size_word": "tres",
+        "name": null,
+        "minutes_late": 0
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "final-late",
+      "context": {
+        "ca": "Sou tres persones. Teniu reserva a nom de Laia i arribeu quinze minuts tard.",
+        "en": "You are three diners with a booking under Laia, arriving fifteen minutes late."
+      },
+      "facts": {
+        "reservation": true,
+        "party_size": 3,
+        "party_size_word": "tres",
+        "name": "Laia",
+        "minutes_late": 15
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    }
+  ],
+  "answer_rules": [
+    {
+      "id": "recognize-booking",
+      "goal": {
+        "ca": "Identifica què et pregunten.",
+        "en": "Identify what staff are asking."
+      },
+      "required_details": {
+        "question_topic": "reservation"
+      },
+      "accepted_responses": [
+        "Si tenim reserva.",
+        "Ens pregunten si hem reservat."
+      ],
+      "hint": {
+        "ca": "Escolta la paraula «reserva».",
+        "en": "Listen for the word “reserva”."
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      },
+      "model_audio_id": "model-booking"
+    },
+    {
+      "id": "confirm-booking",
+      "goal": {
+        "ca": "Digues que tens reserva.",
+        "en": "Say that you have a reservation."
+      },
+      "required_details": {
+        "reservation": true
+      },
+      "accepted_responses": [
+        "Sí, tinc reserva.",
+        "Tinc una taula reservada.",
+        "Voldria confirmar la meva reserva, si us plau."
+      ],
+      "hint": {
+        "ca": "Pots començar amb «Sí».",
+        "en": "You can start with “Sí”."
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      },
+      "model_audio_id": "model-booking"
+    },
+    {
+      "id": "give-name",
+      "goal": {
+        "ca": "Digues a quin nom està la reserva.",
+        "en": "Give the name on the booking."
+      },
+      "required_details": {
+        "name": "$name"
+      },
+      "accepted_responses": [
+        "A nom de {name}.",
+        "La reserva és a nom de {name}.",
+        "{name}."
+      ],
+      "hint": {
+        "ca": "«A nom de…» introdueix el nom.",
+        "en": "“A nom de…” introduces the name."
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      },
+      "model_audio_id": "model-name"
+    },
+    {
+      "id": "request-table",
+      "goal": {
+        "ca": "Digues que no tens reserva i pregunta si hi ha lloc.",
+        "en": "Say you have no booking and ask whether there is space."
+      },
+      "required_details": {
+        "reservation": false,
+        "availability_request": true
+      },
+      "accepted_responses": [
+        "No tenim reserva. Teniu lloc?",
+        "No, però hi hauria alguna taula disponible, si us plau?"
+      ],
+      "hint": {
+        "ca": "Digues si tens reserva i pregunta si hi ha lloc.",
+        "en": "State your booking status and ask about space."
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      },
+      "model_audio_id": "model-table"
+    },
+    {
+      "id": "request-table-size",
+      "goal": {
+        "ca": "Demana una taula per al teu grup.",
+        "en": "Ask for a table for your party."
+      },
+      "required_details": {
+        "availability_request": true,
+        "party_size": "$party_size"
+      },
+      "accepted_responses": [
+        "Teniu lloc per a {party_size_word}?",
+        "Hi ha una taula per a {party_size_word}?",
+        "Voldríem una taula per a {party_size_word}, si us plau."
+      ],
+      "hint": {
+        "ca": "Inclou quantes persones sou.",
+        "en": "Include how many people are in your party."
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      },
+      "model_audio_id": "model-table"
+    },
+    {
+      "id": "repeat",
+      "goal": {
+        "ca": "Demana que ho repeteixin.",
+        "en": "Ask staff to repeat."
+      },
+      "required_details": {
+        "repeat_request": true
+      },
+      "accepted_responses": [
+        "Ho podeu repetir, si us plau?",
+        "Pots repetir-ho?",
+        "Una altra vegada, si us plau."
+      ],
+      "hint": {
+        "ca": "Pots fer servir «repetir».",
+        "en": "You can use “repetir”."
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      },
+      "model_audio_id": "model-repeat"
+    },
+    {
+      "id": "late-table",
+      "goal": {
+        "ca": "Reconeix el retard i pregunta si encara teniu taula.",
+        "en": "Acknowledge being late and ask whether your table is still available."
+      },
+      "required_details": {
+        "late_acknowledgement": true,
+        "table_still_available_request": true
+      },
+      "accepted_responses": [
+        "Sí, perdó! Encara tenim taula?",
+        "Arribem tard. Encara ens podeu donar la taula?",
+        "Ho sento, hem arribat tard. Encara tenim la taula reservada?"
+      ],
+      "hint": {
+        "ca": "Una disculpa pot reconèixer el retard; falta preguntar per la taula.",
+        "en": "An apology can acknowledge lateness; also ask about the table."
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      },
+      "model_audio_id": "model-late"
+    },
+    {
+      "id": "give-size",
+      "goal": {
+        "ca": "Digues quantes persones sou.",
+        "en": "Say how many people are in your party."
+      },
+      "required_details": {
+        "party_size": "$party_size"
+      },
+      "accepted_responses": [
+        "Som {party_size_word}.",
+        "{party_size_word}, si us plau."
+      ],
+      "hint": {
+        "ca": "«Som…» indica quantes persones sou.",
+        "en": "“Som…” says how many people you are."
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      },
+      "model_audio_id": "model-size"
+    },
+    {
+      "id": "accept-seat",
+      "goal": {
+        "ca": "Respon a la invitació a passar.",
+        "en": "Acknowledge the invitation to come in."
+      },
+      "required_details": {
+        "accept_seating": true
+      },
+      "accepted_responses": [
+        "Gràcies!",
+        "D’acord, gràcies.",
+        "Perfecte."
+      ],
+      "hint": {
+        "ca": "Pots acceptar o donar les gràcies.",
+        "en": "You can accept or say thank you."
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      },
+      "model_audio_id": "model-thanks"
+    }
+  ],
+  "model_lines": [
+    {
+      "ca": "Sí, tinc reserva.",
+      "en": "Yes, I have a booking.",
+      "audio_id": "model-booking"
+    },
+    {
+      "ca": "A nom de Martí.",
+      "en": "Under Martí.",
+      "audio_id": "model-name"
+    },
+    {
+      "ca": "No tenim reserva. Teniu lloc per a dos?",
+      "en": "We have no booking. Do you have space for two?",
+      "audio_id": "model-table"
+    },
+    {
+      "ca": "Ho podeu repetir, si us plau?",
+      "en": "Could you repeat that, please?",
+      "audio_id": "model-repeat"
+    },
+    {
+      "ca": "Sí, perdó! Encara tenim taula?",
+      "en": "Yes, sorry! Do we still have a table?",
+      "audio_id": "model-late"
+    },
+    {
+      "ca": "Som tres.",
+      "en": "There are three of us.",
+      "audio_id": "model-size"
+    },
+    {
+      "ca": "D’acord, gràcies.",
+      "en": "Okay, thank you.",
+      "audio_id": "model-thanks"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "listen-booking",
+      "type": "listen_choice",
+      "situation_id": "booked",
+      "rule_id": "recognize-booking",
+      "staff": {
+        "ca": "Bona nit, teniu reserva?",
+        "en": "Good evening, do you have a reservation?",
+        "audio_id": "staff-booking"
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      },
+      "instruction": {
+        "ca": "Escolta. Què et pregunten?",
+        "en": "Listen. What are staff asking?"
+      },
+      "transcript_default": "hidden",
+      "options": [
+        {
+          "id": "topic-food",
+          "text": {
+            "ca": "Què volem menjar.",
+            "en": "What we want to eat."
+          },
+          "expected_outcome": "different_meaning",
+          "missing_details": []
+        },
+        {
+          "id": "topic-booking",
+          "text": {
+            "ca": "Si tenim reserva.",
+            "en": "Whether we have a booking."
+          },
+          "expected_outcome": "communicated",
+          "missing_details": []
+        },
+        {
+          "id": "topic-bill",
+          "text": {
+            "ca": "Si volem pagar.",
+            "en": "Whether we want to pay."
+          },
+          "expected_outcome": "different_meaning",
+          "missing_details": []
+        }
+      ]
+    },
+    {
+      "id": "choose-booking",
+      "type": "choice",
+      "situation_id": "booked",
+      "rule_id": "confirm-booking",
+      "staff": {
+        "ca": "Bona nit, teniu reserva?",
+        "en": "Good evening, do you have a reservation?",
+        "audio_id": "staff-booking"
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      },
+      "options": [
+        {
+          "id": "booking-no",
+          "text": {
+            "ca": "No tenim reserva.",
+            "en": "We have no booking."
+          },
+          "expected_outcome": "different_meaning",
+          "missing_details": []
+        },
+        {
+          "id": "booking-table",
+          "text": {
+            "ca": "Tinc una taula reservada.",
+            "en": "I have a table booked."
+          },
+          "expected_outcome": "communicated",
+          "missing_details": []
+        },
+        {
+          "id": "booking-formal",
+          "text": {
+            "ca": "Voldria confirmar la meva reserva, si us plau.",
+            "en": "I would like to confirm my booking, please."
+          },
+          "expected_outcome": "communicated",
+          "missing_details": []
+        },
+        {
+          "id": "booking-yes",
+          "text": {
+            "ca": "Sí, tinc reserva.",
+            "en": "Yes, I have a booking."
+          },
+          "expected_outcome": "communicated",
+          "missing_details": []
+        }
+      ]
+    },
+    {
+      "id": "build-name",
+      "type": "build",
+      "situation_id": "booked",
+      "rule_id": "give-name",
+      "staff": {
+        "ca": "A quin nom?",
+        "en": "Under what name?",
+        "audio_id": "staff-name"
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      },
+      "known_to_staff": {
+        "reservation": true
+      },
+      "chunks": [
+        {
+          "id": "name-prefix",
+          "text": "A nom de"
+        },
+        {
+          "id": "name-marti",
+          "text": "Martí"
+        },
+        {
+          "id": "name-full",
+          "text": "La reserva és a nom de"
+        },
+        {
+          "id": "name-please",
+          "text": "si us plau"
+        }
+      ],
+      "accepted_chunk_sequences": [
+        [
+          "name-prefix",
+          "name-marti"
+        ],
+        [
+          "name-full",
+          "name-marti"
+        ],
+        [
+          "name-marti"
+        ],
+        [
+          "name-prefix",
+          "name-marti",
+          "name-please"
+        ]
+      ]
+    },
+    {
+      "id": "choose-walk-in",
+      "type": "choice",
+      "situation_id": "walk-in",
+      "rule_id": "request-table",
+      "staff": {
+        "ca": "Bona nit, teniu reserva?",
+        "en": "Good evening, do you have a reservation?",
+        "audio_id": "staff-booking"
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      },
+      "options": [
+        {
+          "id": "walk-formal",
+          "text": {
+            "ca": "No tenim reserva. Hi hauria alguna taula disponible, si us plau?",
+            "en": "We have no booking. Would there be a table available, please?"
+          },
+          "expected_outcome": "communicated",
+          "missing_details": []
+        },
+        {
+          "id": "walk-booked",
+          "text": {
+            "ca": "Sí, tenim reserva.",
+            "en": "Yes, we have a booking."
+          },
+          "expected_outcome": "different_meaning",
+          "missing_details": []
+        },
+        {
+          "id": "walk-short",
+          "text": {
+            "ca": "No, però teniu lloc per a dos?",
+            "en": "No, but do you have room for two?"
+          },
+          "expected_outcome": "communicated",
+          "missing_details": []
+        },
+        {
+          "id": "walk-no",
+          "text": {
+            "ca": "No tenim reserva.",
+            "en": "We have no booking."
+          },
+          "expected_outcome": "needs_information",
+          "missing_details": [
+            "availability_request"
+          ]
+        }
+      ],
+      "follow_up": {
+        "ca": "Quantes persones sou?",
+        "en": "How many people are you?",
+        "audio_id": "staff-size"
+      }
+    },
+    {
+      "id": "type-table",
+      "type": "type",
+      "situation_id": "walk-in",
+      "rule_id": "request-table-size",
+      "staff": {
+        "ca": "Quantes persones sou?",
+        "en": "How many people are you?",
+        "audio_id": "staff-size"
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      },
+      "known_to_staff": {
+        "reservation": false
+      },
+      "instruction": {
+        "ca": "Demana una taula i digues quantes persones sou.",
+        "en": "Ask for a table and say how many people you are."
+      }
+    },
+    {
+      "id": "choose-repeat",
+      "type": "listen_choice",
+      "situation_id": "walk-in",
+      "rule_id": "repeat",
+      "staff": {
+        "ca": "Quantes persones sou?",
+        "en": "How many people are you?",
+        "audio_id": "staff-size"
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      },
+      "instruction": {
+        "ca": "No has entès la pregunta. Demana que la repeteixin.",
+        "en": "You missed the question. Ask staff to repeat it."
+      },
+      "transcript_default": "hidden",
+      "options": [
+        {
+          "id": "repeat-thanks",
+          "text": {
+            "ca": "Gràcies.",
+            "en": "Thank you."
+          },
+          "expected_outcome": "needs_information",
+          "missing_details": [
+            "repeat_request"
+          ]
+        },
+        {
+          "id": "repeat-polite",
+          "text": {
+            "ca": "Ho podeu repetir, si us plau?",
+            "en": "Could you repeat that, please?"
+          },
+          "expected_outcome": "communicated",
+          "missing_details": []
+        },
+        {
+          "id": "repeat-again",
+          "text": {
+            "ca": "Una altra vegada, si us plau.",
+            "en": "Once more, please."
+          },
+          "expected_outcome": "communicated",
+          "missing_details": []
+        }
+      ],
+      "on_success": {
+        "action": "replay_staff",
+        "acknowledgement": {
+          "ca": "És clar.",
+          "en": "Of course.",
+          "audio_id": "staff-repeat"
+        },
+        "audio_id": "staff-size"
+      }
+    },
+    {
+      "id": "build-late",
+      "type": "build",
+      "situation_id": "late",
+      "rule_id": "late-table",
+      "staff": {
+        "ca": "Arribeu una mica tard.",
+        "en": "You are arriving a little late.",
+        "audio_id": "staff-late"
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      },
+      "known_to_staff": {
+        "reservation": true,
+        "name": "Martí",
+        "party_size": 2
+      },
+      "chunks": [
+        {
+          "id": "late-sorry",
+          "text": "Sí, perdó!"
+        },
+        {
+          "id": "late-state",
+          "text": "Arribem tard."
+        },
+        {
+          "id": "late-question",
+          "text": "Encara tenim taula?"
+        },
+        {
+          "id": "late-please",
+          "text": "Si us plau."
+        }
+      ],
+      "accepted_chunk_sequences": [
+        [
+          "late-sorry",
+          "late-question"
+        ],
+        [
+          "late-state",
+          "late-question"
+        ],
+        [
+          "late-question",
+          "late-sorry"
+        ],
+        [
+          "late-sorry",
+          "late-question",
+          "late-please"
+        ]
+      ]
+    },
+    {
+      "id": "type-late",
+      "type": "type",
+      "situation_id": "late",
+      "rule_id": "late-table",
+      "staff": {
+        "ca": "Arribeu una mica tard.",
+        "en": "You are arriving a little late.",
+        "audio_id": "staff-late"
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      },
+      "known_to_staff": {
+        "reservation": true,
+        "name": "Martí",
+        "party_size": 2
+      },
+      "instruction": {
+        "ca": "Respon amb les teves paraules.",
+        "en": "Respond in your own words."
+      }
+    },
+    {
+      "id": "speak-arrival",
+      "type": "speak",
+      "situation_id": "booked",
+      "rule_id": "confirm-booking",
+      "staff": {
+        "ca": "Bona nit, teniu reserva?",
+        "en": "Good evening, do you have a reservation?",
+        "audio_id": "staff-booking"
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      },
+      "tasks": [
+        {
+          "id": "speak-booking",
+          "rule_id": "confirm-booking",
+          "staff": {
+            "ca": "Bona nit, teniu reserva?",
+            "en": "Good evening, do you have a reservation?",
+            "audio_id": "staff-booking"
+          }
+        },
+        {
+          "id": "speak-repeat",
+          "rule_id": "repeat",
+          "staff": {
+            "ca": "A quin nom?",
+            "en": "Under what name?",
+            "audio_id": "staff-name"
+          },
+          "instruction": {
+            "ca": "Ara imagina que no has entès la pregunta. Demana que la repeteixin.",
+            "en": "Now imagine you missed the question. Ask for repetition."
+          }
+        }
+      ],
+      "submission_policy": "explicit_submit_only",
+      "transcript_policy": "editable_not_pronunciation_score",
+      "fallback": "type_same_task"
+    },
+    {
+      "id": "independent-exchange",
+      "type": "exchange",
+      "situation_id": "final-booked",
+      "rule_id": "confirm-booking",
+      "staff": {
+        "ca": "Bona nit, teniu reserva?",
+        "en": "Good evening, do you have a reservation?",
+        "audio_id": "staff-booking"
+      },
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      },
+      "branch_ids": [
+        "reserved",
+        "unreserved",
+        "late-arrival"
+      ],
+      "branch_selection": "least_attempted_then_random",
+      "show_suggested_responses": false,
+      "situation_source": "selected_branch",
+      "rule_source": "current_node",
+      "instruction": {
+        "ca": "Parla amb el personal. Pots demanar que ho repeteixin.",
+        "en": "Talk to staff. You can ask them to repeat."
+      }
+    }
+  ],
+  "branches": [
+    {
+      "id": "reserved",
+      "situation_id": "final-booked",
+      "entry_node": "reserved-status",
+      "nodes": [
+        {
+          "id": "reserved-status",
+          "rule_id": "confirm-booking",
+          "staff": {
+            "ca": "Bona nit, teniu reserva?",
+            "en": "Good evening, do you have a reservation?",
+            "audio_id": "staff-booking"
+          },
+          "on_communicated": "reserved-name",
+          "on_needs_information": "stay_and_prompt_missing",
+          "on_different_meaning": "stay_and_clarify",
+          "on_uncertain": "stay_and_request_rephrase",
+          "on_repeat": "replay_current_staff_without_advancing"
+        },
+        {
+          "id": "reserved-name",
+          "rule_id": "give-name",
+          "staff": {
+            "ca": "A quin nom?",
+            "en": "Under what name?",
+            "audio_id": "staff-name"
+          },
+          "on_communicated": "reserved-size",
+          "on_needs_information": "stay_and_prompt_missing",
+          "on_different_meaning": "stay_and_clarify",
+          "on_uncertain": "stay_and_request_rephrase",
+          "on_repeat": "replay_current_staff_without_advancing",
+          "when_detail_already_known": {
+            "detail": "name",
+            "staff": {
+              "ca": "La reserva és a nom de Laia, oi?",
+              "en": "The booking is under Laia, right?",
+              "audio_id": "staff-confirm-name"
+            },
+            "accept_confirmation": [
+              "Sí.",
+              "Correcte.",
+              "Exacte."
+            ],
+            "on_disagreement": "stay_and_clarify"
+          }
+        },
+        {
+          "id": "reserved-size",
+          "rule_id": "give-size",
+          "staff": {
+            "ca": "Quantes persones sou?",
+            "en": "How many people are you?",
+            "audio_id": "staff-size"
+          },
+          "on_communicated": "reserved-close",
+          "on_needs_information": "stay_and_prompt_missing",
+          "on_different_meaning": "stay_and_clarify",
+          "on_uncertain": "stay_and_request_rephrase",
+          "on_repeat": "replay_current_staff_without_advancing",
+          "when_detail_already_known": {
+            "detail": "party_size",
+            "staff": {
+              "ca": "Sou tres, oi?",
+              "en": "There are three of you, right?",
+              "audio_id": "staff-confirm-party_size"
+            },
+            "accept_confirmation": [
+              "Sí.",
+              "Correcte.",
+              "Exacte."
+            ],
+            "on_disagreement": "stay_and_clarify"
+          }
+        },
+        {
+          "id": "reserved-close",
+          "rule_id": "accept-seat",
+          "staff": {
+            "ca": "Perfecte, passeu, si us plau.",
+            "en": "Great, come in, please.",
+            "audio_id": "staff-seat"
+          },
+          "on_communicated": "complete",
+          "on_needs_information": "stay_and_prompt_missing",
+          "on_different_meaning": "stay_and_clarify",
+          "on_uncertain": "stay_and_request_rephrase",
+          "on_repeat": "replay_current_staff_without_advancing"
+        }
+      ],
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "unreserved",
+      "situation_id": "final-walk-in",
+      "entry_node": "unreserved-request",
+      "nodes": [
+        {
+          "id": "unreserved-request",
+          "rule_id": "request-table",
+          "staff": {
+            "ca": "Bona nit, teniu reserva?",
+            "en": "Good evening, do you have a reservation?",
+            "audio_id": "staff-booking"
+          },
+          "on_communicated": "unreserved-size",
+          "on_needs_information": "stay_and_prompt_missing",
+          "on_different_meaning": "stay_and_clarify",
+          "on_uncertain": "stay_and_request_rephrase",
+          "on_repeat": "replay_current_staff_without_advancing"
+        },
+        {
+          "id": "unreserved-size",
+          "rule_id": "give-size",
+          "staff": {
+            "ca": "Quantes persones sou?",
+            "en": "How many people are you?",
+            "audio_id": "staff-size"
+          },
+          "on_communicated": "unreserved-close",
+          "on_needs_information": "stay_and_prompt_missing",
+          "on_different_meaning": "stay_and_clarify",
+          "on_uncertain": "stay_and_request_rephrase",
+          "on_repeat": "replay_current_staff_without_advancing",
+          "when_detail_already_known": {
+            "detail": "party_size",
+            "staff": {
+              "ca": "Sou tres, oi?",
+              "en": "There are three of you, right?",
+              "audio_id": "staff-confirm-party_size"
+            },
+            "accept_confirmation": [
+              "Sí.",
+              "Correcte.",
+              "Exacte."
+            ],
+            "on_disagreement": "stay_and_clarify"
+          }
+        },
+        {
+          "id": "unreserved-close",
+          "rule_id": "accept-seat",
+          "staff": {
+            "ca": "Perfecte, passeu, si us plau.",
+            "en": "Great, come in, please.",
+            "audio_id": "staff-seat"
+          },
+          "on_communicated": "complete",
+          "on_needs_information": "stay_and_prompt_missing",
+          "on_different_meaning": "stay_and_clarify",
+          "on_uncertain": "stay_and_request_rephrase",
+          "on_repeat": "replay_current_staff_without_advancing"
+        }
+      ],
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "late-arrival",
+      "situation_id": "final-late",
+      "entry_node": "late-status",
+      "nodes": [
+        {
+          "id": "late-status",
+          "rule_id": "confirm-booking",
+          "staff": {
+            "ca": "Bona nit, teniu reserva?",
+            "en": "Good evening, do you have a reservation?",
+            "audio_id": "staff-booking"
+          },
+          "on_communicated": "late-name",
+          "on_needs_information": "stay_and_prompt_missing",
+          "on_different_meaning": "stay_and_clarify",
+          "on_uncertain": "stay_and_request_rephrase",
+          "on_repeat": "replay_current_staff_without_advancing"
+        },
+        {
+          "id": "late-name",
+          "rule_id": "give-name",
+          "staff": {
+            "ca": "A quin nom?",
+            "en": "Under what name?",
+            "audio_id": "staff-name"
+          },
+          "on_communicated": "late-size",
+          "on_needs_information": "stay_and_prompt_missing",
+          "on_different_meaning": "stay_and_clarify",
+          "on_uncertain": "stay_and_request_rephrase",
+          "on_repeat": "replay_current_staff_without_advancing",
+          "when_detail_already_known": {
+            "detail": "name",
+            "staff": {
+              "ca": "La reserva és a nom de Laia, oi?",
+              "en": "The booking is under Laia, right?",
+              "audio_id": "staff-confirm-name"
+            },
+            "accept_confirmation": [
+              "Sí.",
+              "Correcte.",
+              "Exacte."
+            ],
+            "on_disagreement": "stay_and_clarify"
+          }
+        },
+        {
+          "id": "late-size",
+          "rule_id": "give-size",
+          "staff": {
+            "ca": "Quantes persones sou?",
+            "en": "How many people are you?",
+            "audio_id": "staff-size"
+          },
+          "on_communicated": "late-request",
+          "on_needs_information": "stay_and_prompt_missing",
+          "on_different_meaning": "stay_and_clarify",
+          "on_uncertain": "stay_and_request_rephrase",
+          "on_repeat": "replay_current_staff_without_advancing",
+          "when_detail_already_known": {
+            "detail": "party_size",
+            "staff": {
+              "ca": "Sou tres, oi?",
+              "en": "There are three of you, right?",
+              "audio_id": "staff-confirm-party_size"
+            },
+            "accept_confirmation": [
+              "Sí.",
+              "Correcte.",
+              "Exacte."
+            ],
+            "on_disagreement": "stay_and_clarify"
+          }
+        },
+        {
+          "id": "late-request",
+          "rule_id": "late-table",
+          "staff": {
+            "ca": "Arribeu una mica tard.",
+            "en": "You are arriving a little late.",
+            "audio_id": "staff-late"
+          },
+          "on_communicated": "late-close",
+          "on_needs_information": "stay_and_prompt_missing",
+          "on_different_meaning": "stay_and_clarify",
+          "on_uncertain": "stay_and_request_rephrase",
+          "on_repeat": "replay_current_staff_without_advancing"
+        },
+        {
+          "id": "late-close",
+          "rule_id": "accept-seat",
+          "staff": {
+            "ca": "Sí, encara tenim la vostra taula. Passeu.",
+            "en": "Yes, we still have your table. Come in.",
+            "audio_id": "staff-late-seat"
+          },
+          "on_communicated": "complete",
+          "on_needs_information": "stay_and_prompt_missing",
+          "on_different_meaning": "stay_and_clarify",
+          "on_uncertain": "stay_and_request_rephrase",
+          "on_repeat": "replay_current_staff_without_advancing"
+        }
+      ],
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    }
+  ],
+  "conversation_policy": {
+    "max_learner_submissions": 10,
+    "repeat_rule_id": "repeat",
+    "repeat_acknowledgement": {
+      "ca": "És clar.",
+      "en": "Of course.",
+      "audio_id": "staff-repeat"
+    },
+    "carry_forward_details": true,
+    "skip_satisfied_nodes": false,
+    "confirm_previously_supplied_details": true,
+    "success_requires_all_nodes": true,
+    "limit_outcome": "needs_more_practice",
+    "simulation_only": true
+  },
+  "audio": {
+    "staff-booking": {
+      "text": "Bona nit, teniu reserva?",
+      "language": "ca",
+      "src": null,
+      "status": "not_generated",
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    "staff-name": {
+      "text": "A quin nom?",
+      "language": "ca",
+      "src": null,
+      "status": "not_generated",
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    "staff-size": {
+      "text": "Quantes persones sou?",
+      "language": "ca",
+      "src": null,
+      "status": "not_generated",
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    "staff-late": {
+      "text": "Arribeu una mica tard.",
+      "language": "ca",
+      "src": null,
+      "status": "not_generated",
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    "staff-seat": {
+      "text": "Perfecte, passeu, si us plau.",
+      "language": "ca",
+      "src": null,
+      "status": "not_generated",
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    "staff-late-seat": {
+      "text": "Sí, encara tenim la vostra taula. Passeu.",
+      "language": "ca",
+      "src": null,
+      "status": "not_generated",
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    "staff-repeat": {
+      "text": "És clar.",
+      "language": "ca",
+      "src": null,
+      "status": "not_generated",
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    "model-booking": {
+      "text": "Sí, tinc reserva.",
+      "language": "ca",
+      "src": null,
+      "status": "not_generated",
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    "model-name": {
+      "text": "A nom de Martí.",
+      "language": "ca",
+      "src": null,
+      "status": "not_generated",
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    "model-table": {
+      "text": "No tenim reserva. Teniu lloc per a dos?",
+      "language": "ca",
+      "src": null,
+      "status": "not_generated",
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    "model-repeat": {
+      "text": "Ho podeu repetir, si us plau?",
+      "language": "ca",
+      "src": null,
+      "status": "not_generated",
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    "model-late": {
+      "text": "Sí, perdó! Encara tenim taula?",
+      "language": "ca",
+      "src": null,
+      "status": "not_generated",
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    "model-size": {
+      "text": "Som tres.",
+      "language": "ca",
+      "src": null,
+      "status": "not_generated",
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    "model-thanks": {
+      "text": "D’acord, gràcies.",
+      "language": "ca",
+      "src": null,
+      "status": "not_generated",
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    "staff-confirm-name": {
+      "text": "La reserva és a nom de Laia, oi?",
+      "language": "ca",
+      "src": null,
+      "status": "not_generated",
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    },
+    "staff-confirm-party_size": {
+      "text": "Sou tres, oi?",
+      "language": "ca",
+      "src": null,
+      "status": "not_generated",
+      "review": {
+        "status": "awaiting_native_review",
+        "reviewer": null,
+        "reviewed_at": null
+      }
+    }
+  },
+  "progress_contract": {
+    "states": [
+      "not_started",
+      "practised_with_help",
+      "completed_independently"
+    ],
+    "revisit_later": "A separate due flag; preserves previous completion evidence.",
+    "independent_requirement": "All nodes communicated in a fresh final branch attempt without staff translation, hint, model or answer-revealing correction. Repetition and clarification of requested details are allowed.",
+    "store": [
+      "lesson_id",
+      "content_version",
+      "exercise_id",
+      "branch_id",
+      "attempt_outcomes",
+      "assistance_used",
+      "input_mode",
+      "transcript_edited",
+      "last_practised_at",
+      "completed_at",
+      "revisit_due_at"
+    ],
+    "never_store": [
+      "raw_recording",
+      "api_credentials"
+    ],
+    "revisit_after_hours": 24
+  },
+  "next_day_check": {
+    "status": "planned_not_run",
+    "method": "Use another final branch the next day with changed name/party size; no model-answer warmup. Record requested details communicated, recovery, help used and unresolved turns. A beginner test, not a retention guarantee. Substitute changed facts in confirmation questions too; do not reuse a Laia/tres confirmation clip for Joan/quatre. Text-only changed confirmations until corresponding audio is reviewed.",
+    "fact_sets": [
+      {
+        "name": "Joan",
+        "party_size": 4,
+        "party_size_word": "quatre",
+        "minutes_late": 10
+      }
+    ],
+    "expansion_gate": "Observe beginners completing a changed situation; review difficulties before choosing the reusable template."
+  },
+  "completion_copy": {
+    "assisted": {
+      "ca": "Has practicat amb ajuda. Pots tornar-ho a provar.",
+      "en": "You practised with help. You can try again."
+    },
+    "independent": {
+      "ca": "Has completat aquesta situació sense pistes.",
+      "en": "You completed this situation without hints."
+    },
+    "revisit": {
+      "ca": "Torna demà i prova una situació diferent.",
+      "en": "Come back tomorrow and try a changed situation."
+    }
+  },
+  "teaching_notes": [
+    {
+      "id": "reservation-note",
+      "before_exercise": "choose-booking",
+      "text": {
+        "ca": "«Tinc reserva» i «Tinc una taula reservada» comuniquen que has reservat. Pots ser breu o formal.",
+        "en": "“Tinc reserva” and “Tinc una taula reservada” both communicate a booking. Short or formal wording is fine."
+      }
+    },
+    {
+      "id": "party-size-note",
+      "before_exercise": "type-table",
+      "text": {
+        "ca": "«Teniu lloc?» pregunta si hi ha espai. «Som dos» diu quantes persones sou: dos, tres, quatre.",
+        "en": "“Teniu lloc?” asks about space. “Som dos” says your party size: two, three, four."
+      }
+    },
+    {
+      "id": "recovery-note",
+      "before_exercise": "choose-repeat",
+      "text": {
+        "ca": "Si no ho entens, pots demanar que ho repeteixin. És part de la conversa.",
+        "en": "If you miss something, you can ask for repetition. That is part of communicating."
+      }
+    },
+    {
+      "id": "late-note",
+      "before_exercise": "build-late",
+      "text": {
+        "ca": "«Perdó» pot reconèixer el retard. Després pregunta si encara teniu taula.",
+        "en": "“Perdó” can acknowledge being late. Then ask whether you still have a table."
+      }
+    },
+    {
+      "id": "closing-note",
+      "before_exercise": "speak-arrival",
+      "text": {
+        "ca": "«Passeu» et convida a entrar. Pots respondre «D’acord, gràcies».",
+        "en": "“Passeu” invites you to come in. You can answer “D’acord, gràcies”."
+      }
+    }
+  ],
+  "feedback": {
+    "communicated": {
+      "ca": "Has comunicat el que calia.",
+      "en": "You communicated what was needed."
+    },
+    "different_meaning": {
+      "ca": "Aquesta resposta no coincideix amb la situació. Revisa les dades i torna-ho a provar.",
+      "en": "This response does not match the situation. Check the facts and try again."
+    },
+    "uncertain": {
+      "ca": "No podem valorar aquesta resposta amb prou seguretat. Pots dir-ho d’una altra manera?",
+      "en": "We cannot assess this response confidently. Can you rephrase it?"
+    },
+    "missing_details": {
+      "question_topic": {
+        "ca": "Què et pregunten?",
+        "en": "What are staff asking?"
+      },
+      "reservation": {
+        "ca": "Digues si tens reserva.",
+        "en": "Say whether you have a booking."
+      },
+      "name": {
+        "ca": "A quin nom?",
+        "en": "Under what name?"
+      },
+      "availability_request": {
+        "ca": "Pregunta si hi ha una taula disponible.",
+        "en": "Ask whether a table is available."
+      },
+      "party_size": {
+        "ca": "Quantes persones sou?",
+        "en": "How many people are you?"
+      },
+      "repeat_request": {
+        "ca": "Demana que ho repeteixin.",
+        "en": "Ask for repetition."
+      },
+      "late_acknowledgement": {
+        "ca": "Reconeix que arribeu tard.",
+        "en": "Acknowledge arriving late."
+      },
+      "table_still_available_request": {
+        "ca": "Pregunta si encara teniu taula.",
+        "en": "Ask whether you still have a table."
+      },
+      "accept_seating": {
+        "ca": "Respon a la invitació a passar.",
+        "en": "Acknowledge the invitation to come in."
+      }
+    }
+  }
+}

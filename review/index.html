@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Native review · Cassola</title><meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Newsreader:ital,wght@1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/review/review.css">
+</head>
+<body>
+<header><a class="brand" href="/">cassola<span>native speaker review</span></a><div class="stamp">CATALÀ, AMB CURA.</div></header>
+<div id="login" class="entry"><h1>A little review goes a long way.</h1><p>Help us teach useful Catalan for walking into a restaurant. Read a section, confirm it or suggest a change. You can stop whenever you like; another reviewer can pick up the rest.</p><form id="login-form"><label for="code">Review code</label><div class="inline"><input id="code" type="password" autocomplete="current-password" required><button>Open review →</button></div></form><p id="login-message" role="status"></p></div>
+<div id="workspace" hidden>
+<section class="intro"><div><div class="kicker">WALKING IN · WORDING REVIEW</div><h1>Does this sound right?</h1><p>Check meaning, Catalan and English translations. Formal or longer answers can be perfectly valid. <strong>Review as much or as little as you like.</strong></p></div><div class="identity"><label for="reviewer-name">Your name or initials</label><input id="reviewer-name" maxlength="80" autocomplete="name" placeholder="How should we credit you?"><small>Shared with the other reviewers. No account needed.</small></div></section>
+<div class="toolbar"><div id="progress" aria-live="polite"></div><label class="filter-label">Show <select id="filter"><option value="all">All sections</option><option value="pending">Still to review</option><option value="changes">Needs changes</option><option value="approved">Confirmed</option></select></label><button id="refresh" class="quiet">Refresh shared progress</button></div>
+<p id="global-message" role="status"></p>
+<div class="layout"><aside><nav id="section-nav" aria-label="Review sections"></nav></aside><main id="main" tabindex="-1"><div class="section-heading"><div id="section-group" class="kicker"></div><h2 id="section-title"></h2><p id="section-status"></p></div><div id="wording"></div>
+<section class="review-box"><h3>Your review of this section</h3><p>“Looks good” confirms all wording shown above. If you have only checked part, save a draft. Audio is not part of this review.</p><label for="comment">Feedback or suggested Catalan wording</label><textarea id="comment" rows="4" maxlength="4000" placeholder="For example: in the second response, I’d say…"></textarea><div class="actions"><button id="save-draft" class="quiet">Save draft</button><button id="save-changes" class="changes">Needs changes · save</button><button id="save-approved" class="approve">Looks good · save ✓</button></div><p id="save-message" role="status" aria-live="polite"></p></section>
+<section class="history"><h3>Shared notes</h3><div id="reviews"></div><details><summary>Earlier feedback on changed wording</summary><div id="older-reviews"></div></details></section><div class="next-row"><button id="previous" class="quiet">← Previous</button><button id="next">Next section →</button></div></main></div>
+<footer>Thank you. One carefully reviewed section is useful. Your saved feedback stays here for the next person.</footer>
+</div>
+<script type="module" src="/review/review.mjs"></script>
+</body></html>

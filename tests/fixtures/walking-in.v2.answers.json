@@ -1,0 +1,748 @@
+{
+  "schema_version": 1,
+  "lesson_id": "walking-in",
+  "content_version": "2.0.0-draft.1",
+  "review": {
+    "status": "awaiting_native_review",
+    "reviewer": null,
+    "reviewed_at": null
+  },
+  "status": "expectations_only_evaluator_not_implemented",
+  "answer_cases": [
+    {
+      "id": "recognize-booking-01",
+      "rule_id": "recognize-booking",
+      "situation_id": "booked",
+      "input": "Si tenim reserva.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "communicated",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "recognize-booking-02",
+      "rule_id": "recognize-booking",
+      "situation_id": "booked",
+      "input": "",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "needs_information",
+        "missing_details": [
+          "question_topic"
+        ]
+      }
+    },
+    {
+      "id": "recognize-booking-03",
+      "rule_id": "recognize-booking",
+      "situation_id": "booked",
+      "input": "Si volem pagar.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "different_meaning",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "recognize-booking-04",
+      "rule_id": "recognize-booking",
+      "situation_id": "booked",
+      "input": "Sobre allò d’ahir.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "uncertain",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "confirm-booking-01",
+      "rule_id": "confirm-booking",
+      "situation_id": "booked",
+      "input": "Tinc una taula reservada.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "communicated",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "confirm-booking-02",
+      "rule_id": "confirm-booking",
+      "situation_id": "booked",
+      "input": "Voldria confirmar la meva reserva, si us plau.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "communicated",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "confirm-booking-03",
+      "rule_id": "confirm-booking",
+      "situation_id": "booked",
+      "input": "Bon vespre.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "needs_information",
+        "missing_details": [
+          "reservation"
+        ]
+      }
+    },
+    {
+      "id": "confirm-booking-04",
+      "rule_id": "confirm-booking",
+      "situation_id": "booked",
+      "input": "No tenim reserva.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "different_meaning",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "confirm-booking-05",
+      "rule_id": "confirm-booking",
+      "situation_id": "booked",
+      "input": "Potser la van fer.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "uncertain",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "confirm-booking-06",
+      "rule_id": "confirm-booking",
+      "situation_id": "booked",
+      "input": " SI, TINC RESERVA! ",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "communicated",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "give-name-01",
+      "rule_id": "give-name",
+      "situation_id": "booked",
+      "input": "Martí.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "communicated",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "give-name-02",
+      "rule_id": "give-name",
+      "situation_id": "booked",
+      "input": "La reserva és a nom de Martí.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "communicated",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "give-name-03",
+      "rule_id": "give-name",
+      "situation_id": "booked",
+      "input": "Tinc reserva.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "needs_information",
+        "missing_details": [
+          "name"
+        ]
+      }
+    },
+    {
+      "id": "give-name-04",
+      "rule_id": "give-name",
+      "situation_id": "booked",
+      "input": "A nom de Laia.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "different_meaning",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "give-name-05",
+      "rule_id": "give-name",
+      "situation_id": "booked",
+      "input": "Al nom de sempre.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "uncertain",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "request-table-01",
+      "rule_id": "request-table",
+      "situation_id": "walk-in",
+      "input": "No tenim reserva. Hi hauria alguna taula disponible, si us plau?",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "communicated",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "request-table-02",
+      "rule_id": "request-table",
+      "situation_id": "walk-in",
+      "input": "No, però teniu lloc per dos?",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "communicated",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "request-table-03",
+      "rule_id": "request-table",
+      "situation_id": "walk-in",
+      "input": "No tenim reserva.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "needs_information",
+        "missing_details": [
+          "availability_request"
+        ]
+      }
+    },
+    {
+      "id": "request-table-04",
+      "rule_id": "request-table",
+      "situation_id": "walk-in",
+      "input": "Sí, tenim reserva. Teniu taula?",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "different_meaning",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "request-table-05",
+      "rule_id": "request-table",
+      "situation_id": "walk-in",
+      "input": "Ja sabeu què busquem.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "uncertain",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "request-table-size-01",
+      "rule_id": "request-table-size",
+      "situation_id": "walk-in",
+      "input": "Voldríem una taula per a dos, si us plau.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "communicated",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "request-table-size-02",
+      "rule_id": "request-table-size",
+      "situation_id": "walk-in",
+      "input": "Teniu lloc per 2?",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "communicated",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "request-table-size-03",
+      "rule_id": "request-table-size",
+      "situation_id": "walk-in",
+      "input": "Teniu una taula?",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "needs_information",
+        "missing_details": [
+          "party_size"
+        ]
+      }
+    },
+    {
+      "id": "request-table-size-04",
+      "rule_id": "request-table-size",
+      "situation_id": "walk-in",
+      "input": "Som dos.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "needs_information",
+        "missing_details": [
+          "availability_request"
+        ]
+      }
+    },
+    {
+      "id": "request-table-size-05",
+      "rule_id": "request-table-size",
+      "situation_id": "walk-in",
+      "input": "Teniu lloc per a tres?",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "different_meaning",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "request-table-size-06",
+      "rule_id": "request-table-size",
+      "situation_id": "walk-in",
+      "input": "Hi cabrem tots?",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "uncertain",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "repeat-01",
+      "rule_id": "repeat",
+      "situation_id": "walk-in",
+      "input": "Pots repetir-ho?",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "communicated",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "repeat-02",
+      "rule_id": "repeat",
+      "situation_id": "walk-in",
+      "input": "Una altra vegada, si us plau.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "communicated",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "repeat-03",
+      "rule_id": "repeat",
+      "situation_id": "walk-in",
+      "input": "Gràcies.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "needs_information",
+        "missing_details": [
+          "repeat_request"
+        ]
+      }
+    },
+    {
+      "id": "repeat-04",
+      "rule_id": "repeat",
+      "situation_id": "walk-in",
+      "input": "No ho repeteixis.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "different_meaning",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "repeat-05",
+      "rule_id": "repeat",
+      "situation_id": "walk-in",
+      "input": "Com allò?",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "uncertain",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "late-table-01",
+      "rule_id": "late-table",
+      "situation_id": "late",
+      "input": "Sí, perdó! Encara tenim taula?",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "communicated",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "late-table-02",
+      "rule_id": "late-table",
+      "situation_id": "late",
+      "input": "El trànsit estava fatal, ho sento moltíssim. Encara tenim la taula?",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "communicated",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "late-table-03",
+      "rule_id": "late-table",
+      "situation_id": "late",
+      "input": "El trànsit estava fatal, ho sento moltíssim.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "needs_information",
+        "missing_details": [
+          "table_still_available_request"
+        ]
+      }
+    },
+    {
+      "id": "late-table-04",
+      "rule_id": "late-table",
+      "situation_id": "late",
+      "input": "Encara tenim taula?",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "needs_information",
+        "missing_details": [
+          "late_acknowledgement"
+        ]
+      }
+    },
+    {
+      "id": "late-table-05",
+      "rule_id": "late-table",
+      "situation_id": "late",
+      "input": "Arribem tard, però no volem la taula.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "different_meaning",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "late-table-06",
+      "rule_id": "late-table",
+      "situation_id": "late",
+      "input": "La cosa segueix igual?",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "uncertain",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "give-size-01",
+      "rule_id": "give-size",
+      "situation_id": "final-booked",
+      "input": "Som tres.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "communicated",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "give-size-02",
+      "rule_id": "give-size",
+      "situation_id": "final-booked",
+      "input": "3",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "communicated",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "give-size-03",
+      "rule_id": "give-size",
+      "situation_id": "final-booked",
+      "input": "Tenim reserva.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "needs_information",
+        "missing_details": [
+          "party_size"
+        ]
+      }
+    },
+    {
+      "id": "give-size-04",
+      "rule_id": "give-size",
+      "situation_id": "final-booked",
+      "input": "Som dos.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "different_meaning",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "give-size-05",
+      "rule_id": "give-size",
+      "situation_id": "final-booked",
+      "input": "Som els de sempre.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "uncertain",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "accept-seat-01",
+      "rule_id": "accept-seat",
+      "situation_id": "final-booked",
+      "input": "D’acord, gràcies.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "communicated",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "accept-seat-02",
+      "rule_id": "accept-seat",
+      "situation_id": "final-booked",
+      "input": "Perfecte.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "communicated",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "accept-seat-03",
+      "rule_id": "accept-seat",
+      "situation_id": "final-booked",
+      "input": "",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "needs_information",
+        "missing_details": [
+          "accept_seating"
+        ]
+      }
+    },
+    {
+      "id": "accept-seat-04",
+      "rule_id": "accept-seat",
+      "situation_id": "final-booked",
+      "input": "No, marxem.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "different_meaning",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "accept-seat-05",
+      "rule_id": "accept-seat",
+      "situation_id": "final-booked",
+      "input": "Ja veurem.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "uncertain",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "carry-forward-size",
+      "rule_id": "request-table-size",
+      "situation_id": "walk-in",
+      "input": "Teniu una taula?",
+      "known_to_staff": {
+        "party_size": 2,
+        "reservation": false
+      },
+      "expected": {
+        "outcome": "communicated",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "contradict-known-size",
+      "rule_id": "request-table-size",
+      "situation_id": "walk-in",
+      "input": "Teniu taula per a tres?",
+      "known_to_staff": {
+        "party_size": 2
+      },
+      "expected": {
+        "outcome": "different_meaning",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "negated-booking-keywords",
+      "rule_id": "confirm-booking",
+      "situation_id": "booked",
+      "input": "No és cert que tinguem reserva.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "different_meaning",
+        "missing_details": []
+      }
+    },
+    {
+      "id": "name-accent-tolerance",
+      "rule_id": "give-name",
+      "situation_id": "booked",
+      "input": "A nom de Marti.",
+      "known_to_staff": {},
+      "expected": {
+        "outcome": "communicated",
+        "missing_details": []
+      }
+    }
+  ],
+  "branch_cases": [
+    {
+      "id": "reserved-independent",
+      "branch_id": "reserved",
+      "turns": [
+        {
+          "node_id": "reserved-status",
+          "input": "Sí, tenim reserva.",
+          "expected_outcome": "communicated",
+          "expected_next": "reserved-name"
+        },
+        {
+          "node_id": "reserved-name",
+          "input": "A nom de Laia.",
+          "expected_outcome": "communicated",
+          "expected_next": "reserved-size"
+        },
+        {
+          "node_id": "reserved-size",
+          "input": "Som tres.",
+          "expected_outcome": "communicated",
+          "expected_next": "reserved-close"
+        },
+        {
+          "node_id": "reserved-close",
+          "input": "Gràcies!",
+          "expected_outcome": "communicated",
+          "expected_next": "complete"
+        }
+      ],
+      "expected_progress": "completed_independently"
+    },
+    {
+      "id": "unreserved-independent",
+      "branch_id": "unreserved",
+      "turns": [
+        {
+          "node_id": "unreserved-request",
+          "input": "No tenim reserva. Teniu lloc?",
+          "expected_outcome": "communicated",
+          "expected_next": "unreserved-size"
+        },
+        {
+          "node_id": "unreserved-size",
+          "input": "Som tres.",
+          "expected_outcome": "communicated",
+          "expected_next": "unreserved-close"
+        },
+        {
+          "node_id": "unreserved-close",
+          "input": "Gràcies!",
+          "expected_outcome": "communicated",
+          "expected_next": "complete"
+        }
+      ],
+      "expected_progress": "completed_independently"
+    },
+    {
+      "id": "late-arrival-independent",
+      "branch_id": "late-arrival",
+      "turns": [
+        {
+          "node_id": "late-status",
+          "input": "Sí, tenim reserva.",
+          "expected_outcome": "communicated",
+          "expected_next": "late-name"
+        },
+        {
+          "node_id": "late-name",
+          "input": "A nom de Laia.",
+          "expected_outcome": "communicated",
+          "expected_next": "late-size"
+        },
+        {
+          "node_id": "late-size",
+          "input": "Som tres.",
+          "expected_outcome": "communicated",
+          "expected_next": "late-request"
+        },
+        {
+          "node_id": "late-request",
+          "input": "Sí, perdó! Encara tenim taula?",
+          "expected_outcome": "communicated",
+          "expected_next": "late-close"
+        },
+        {
+          "node_id": "late-close",
+          "input": "Gràcies!",
+          "expected_outcome": "communicated",
+          "expected_next": "complete"
+        }
+      ],
+      "expected_progress": "completed_independently"
+    }
+  ],
+  "behavior_cases": [
+    {
+      "id": "repeat-resumes",
+      "branch_id": "reserved",
+      "node_id": "reserved-name",
+      "input": "Ho podeu repetir, si us plau?",
+      "expected": "Replay same question; remain at reserved-name; no assistance penalty."
+    },
+    {
+      "id": "help-is-assisted",
+      "branch_id": "unreserved",
+      "event": "Reveal staff English then complete every node.",
+      "expected": "practised_with_help, not completed_independently for this attempt."
+    },
+    {
+      "id": "turn-limit",
+      "branch_id": "late-arrival",
+      "event": "Ten submissions without satisfying all nodes.",
+      "expected": "needs_more_practice; no independent completion."
+    },
+    {
+      "id": "unknown-answer",
+      "event": "Plausible novel wording cannot be confidently interpreted.",
+      "expected": "uncertain; offer rephrase; never reject for not matching a whitelist."
+    },
+    {
+      "id": "recording-submit",
+      "event": "Record and replay without pressing submit.",
+      "expected": "No transcription request; no recording stored in progress."
+    },
+    {
+      "id": "edited-transcript",
+      "event": "Learner edits a mistranscription.",
+      "expected": "Assess corrected meaning; mark edited transcript, not verified spoken performance."
+    },
+    {
+      "id": "next-day",
+      "event": "Return at or after revisit_due_at.",
+      "expected": "Show revisit later without deleting earlier completion; use changed facts."
+    },
+    {
+      "id": "choice-shuffle",
+      "event": "Render and select shuffled choices.",
+      "expected": "Keep order stable during attempt; score by option ID; hide outcomes and translations until requested/checked."
+    },
+    {
+      "id": "volunteered-details",
+      "branch_id": "reserved",
+      "event": "First reply states booking, Laia and three diners.",
+      "expected": "Later name/size nodes use confirmation prompts; Sí confirms stored values, wrong replacement facts stay for clarification."
+    }
+  ]
+}

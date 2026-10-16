@@ -1,0 +1,17 @@
+{
+  "name": "cassola",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:review": "node --test tests/review.test.mjs",
+    "dev:review": "node scripts/review-dev.mjs",
+    "test:lesson": "node --test tests/engine.test.mjs",
+    "test:progress": "node --test tests/progress.test.mjs"
+  },
+  "dependencies": {
+    "@vercel/blob": "2.8.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
