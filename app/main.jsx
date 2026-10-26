@@ -100,29 +100,39 @@ function Glossed({text,onHelp}){return <span lang="ca">{glossText(text).map((par
 function SentMessages({exercise,submissions,lesson}){
  return submissions.map((submission,i)=>{const reply=sentReply(exercise,submission),missing=submission.missing||exercise.options?.find(o=>o.id===submission.input)?.missing_details||[];return <React.Fragment key={i}>
  <div className="chat-message learner" aria-label={exercise.id==='listen-booking'?'Your interpretation':'Your reply'}><Copy value={reply} english/></div>
- <div className={'delivery '+(submission.outcome==='communicated'?'delivered':'')}>
- {submission.outcome==='communicated'?'✓ Missatge comunicat':submission.outcome==='needs_information'?'Falta una dada':submission.outcome==='uncertain'?'Provem-ho d’una altra manera':'Revisa la situació'}
- </div>
+ {submission.outcome!=='communicated'&&<div className="delivery">
+ {submission.outcome==='needs_information'?'Falta una dada':submission.outcome==='uncertain'?'Provem-ho d’una altra manera':'Revisa la situació'}
+ </div>}
  {submission.outcome!=='communicated'&&<div className="chat-coaching" lang="en">{submission.outcome==='needs_information'&&missing.length?missing.map(k=><p key={k}>{lesson.feedback.missing_details[k]?.en}</p>):submission.outcome==='uncertain'?'Your answer may be valid. The checker couldn’t recognise it.':(lesson.feedback[submission.outcome]?.en||'Add the missing detail and send again.')}</div>}
  </React.Fragment>;});
 }
-function AudioButton({lesson,staff}){
- const clip=clipFor(lesson,staff),id=React.useId();
+const SPEAKER=<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>;
+function AudioButton({lesson,staff,autoPlay=false}){
+ const clip=clipFor(lesson,staff),id=React.useId(),manual=useRef(false);
  const [state,setState]=useState(player.getState);
  useEffect(()=>player.subscribe(setState),[]);
+ // Read the line out once when it appears; browsers may block this, so failures stay silent.
+ useEffect(()=>{if(autoPlay&&clip)player.play(id,clip.path);},[]);
  if(!clip)return null;
  const status=state.key===id?state.status:'idle',busy=['loading','playing'].includes(status);
- return <div className="audio-control"><button type="button" className="audio-play" title="Voice trial — native listening review pending" aria-label={`${status==='playing'?'Stop':status==='error'?'Retry audio for':'Play'}: ${staff.ca}`} onClick={()=>busy?player.stop():player.play(id,clip.path)}>{status==='loading'?'◼ Carregant…':status==='playing'?'◼ Atura':status==='error'?'↻ Torna-ho a provar':status==='ended'?'↻ Torna a escoltar':'▶ Escolta'}</button>{status==='error'&&<span role="status" lang="en">Audio unavailable. You can still read the message.</span>}</div>;
+ return <button type="button" className={'audio-play '+status} title="Voice trial — native listening review pending" aria-label={`${busy?'Stop':'Play'}: ${staff.ca}`} onClick={()=>{manual.current=true;busy?player.stop():player.play(id,clip.path);}}>{SPEAKER}{status==='error'&&manual.current&&<span className="sr-only" role="status">Audio unavailable.</span>}</button>;
 }
 function ConversationTurn({exercise,previous,lesson,submissions,children,onHelp,active=false}){
  const context=turnContext(lesson,exercise,previous);
- return <section className="conversation-turn" aria-label={active?'Current conversation turn':'Earlier conversation turn'}>
+ // New turns reveal one bubble at a time: scene, waiter, then your reply.
+ const [stage,setStage]=useState(active&&!submissions.length?0:2);
+ const root=useRef(null);
+ useEffect(()=>{if(active&&stage>0)root.current?.lastElementChild?.scrollIntoView({block:'nearest'});},[stage]);
+ useEffect(()=>{if(stage>=2)return;const t=setTimeout(()=>setStage(stage+1),stage===0?(context.scene?700:0):(context.staff?1500:0));return()=>clearTimeout(t);},[stage]);
+ return <section ref={root} className="conversation-turn" aria-label={active?'Current conversation turn':'Earlier conversation turn'}>
  {context.scene&&<div className="scene-message"><Glossed text={context.scene.ca}/></div>}
- {context.staff&&<div className="chat-message waiter"><Glossed text={exercise.staff.ca} onHelp={onHelp}/><AudioButton lesson={lesson} staff={exercise.staff}/>{submissions.length>0&&<div className="english" lang="en">{exercise.staff.en}</div>}</div>}
+ {context.staff&&stage>=1&&<div className="chat-message waiter"><div className="waiter-line"><AudioButton lesson={lesson} staff={exercise.staff} autoPlay={active&&stage===1}/><Glossed text={exercise.staff.ca} onHelp={onHelp}/></div>{submissions.length>0&&<div className="english" lang="en">{exercise.staff.en}</div>}</div>}
+ {stage>=2&&<>
  <div className="chat-instruction"><Glossed text={context.instruction.ca}/></div>
  <SentMessages exercise={exercise} submissions={submissions} lesson={lesson}/>
  {submissions.at(-1)?.outcome==='communicated'&&exercise.on_success&&<div className="chat-message waiter"><Copy value={exercise.on_success.acknowledgement} english/><Copy value={exercise.staff} english/></div>}
  {children}
+ </>}
  </section>;
 }
 function Exercise({exercise:e,previousExercise,lesson,onFinish,onDraft,draft}){
@@ -136,7 +146,8 @@ function Exercise({exercise:e,previousExercise,lesson,onFinish,onDraft,draft}){
  useEffect(()=>{onDraft({id:e.id,order:initial.order,picked,chunks,answer,english:initial.english,hint:initial.hint,model:initial.model,result,previous,assisted,submissions});},[picked,chunks,answer,result,previous,assisted,submissions]);
  const anchor=useRef(null);
  useEffect(()=>{anchor.current?.scrollIntoView({block:'nearest'});},[submissions.length]);
- useEffect(()=>{anchor.current?.querySelector('input,textarea,button')?.focus({preventScroll:true});},[]);
+ // The reply area mounts after the waiter bubble is revealed, so focus it when it arrives.
+ const attach=el=>{if(el&&!anchor.current){anchor.current=el;el.scrollIntoView({block:'nearest'});el.querySelector('input,textarea,button')?.focus({preventScroll:true});}};
  // Older saved drafts may already have a successful answer awaiting Continue.
 
  const typed=e.type==='type',built=e.type==='build',choice=!!e.options,success=result?.outcome==='communicated';
@@ -153,11 +164,11 @@ function Exercise({exercise:e,previousExercise,lesson,onFinish,onDraft,draft}){
  }
  const modelText=rule.accepted_responses[0].replace(/\{(\w+)\}/g,(_,k)=>situation.facts[k]??'');
  return <ConversationTurn exercise={e} previous={previousExercise} lesson={lesson} submissions={submissions} onHelp={help} active>
-  <div ref={anchor} className="reply-area exercise">
+  <div ref={attach} className="reply-area exercise">
   {!success&&<form onSubmit={check} aria-label="Compose a reply">
   <div className="composer-label">{built?'Construeix la resposta':typed?'Escriu la resposta':'Tria la resposta'}</div>
    {choice&&<fieldset><legend className="sr-only">La teva resposta</legend><div className="choices">{order.map(o=><div key={o.id} className={'choice '+(picked===o.id?'selected':'')} onClick={event=>{if(!success&&!event.target.closest('button'))changed(()=>setPicked(o.id));}}><input type="radio" name={e.id} aria-label={o.text.ca} value={o.id} disabled={success} checked={picked===o.id} onChange={()=>changed(()=>setPicked(o.id))}/><div><Glossed text={o.text.ca} onHelp={help}/></div></div>)}</div></fieldset>}
-   {built&&<fieldset disabled={success}><legend className="sr-only">Construeix la resposta</legend><div className="assembly" aria-live="polite">{chunks.length?chunks.map((id,i)=><button className="chunk selected" type="button" key={id} aria-label={`Remove chunk ${i+1}: ${e.chunks.find(c=>c.id===id).text}`} onClick={()=>changed(()=>setChunks(chunks.filter(c=>c!==id)))}>{e.chunks.find(c=>c.id===id).text} ×</button>):<span className="english">La teva frase…</span>}</div><div className="chunks">{order.map(c=><button className="chunk" type="button" key={c.id} disabled={success||chunks.includes(c.id)} onClick={()=>changed(()=>setChunks([...chunks,c.id]))}>{c.text}</button>)}</div><button className="text-button undo" type="button" disabled={!chunks.length||success} onClick={()=>changed(()=>setChunks(chunks.slice(0,-1)))}>↶ Desfés</button></fieldset>}
+   {built&&<fieldset disabled={success}><legend className="sr-only">Construeix la resposta</legend><div className="assembly" aria-live="polite">{chunks.length?chunks.map((id,i)=><button className="chunk selected" type="button" key={id} aria-label={`Remove chunk ${i+1}: ${e.chunks.find(c=>c.id===id).text}`} onClick={()=>changed(()=>setChunks(chunks.filter(c=>c!==id)))}>{e.chunks.find(c=>c.id===id).text}</button>):<span className="english">La teva frase…</span>}</div><div className="chunks">{order.map(c=><button className="chunk" type="button" key={c.id} disabled={success||chunks.includes(c.id)} onClick={()=>changed(()=>setChunks([...chunks,c.id]))}>{c.text}</button>)}</div><button className="text-button undo" type="button" disabled={!chunks.length||success} onClick={()=>changed(()=>setChunks(chunks.slice(0,-1)))}>↶ Desfés</button></fieldset>}
    {typed&&<div><label className="sr-only" htmlFor="answer">La teva resposta</label><textarea id="answer" placeholder="Escriu la teva resposta…" value={answer} disabled={success} maxLength={500} rows={3} spellCheck lang="ca" onChange={event=>changed(()=>setAnswer(event.target.value))}/></div>}
    {result&&!choice&&<div className="chat-coaching"><span lang="en">You could say:</span> <span lang="ca">{modelText}</span></div>}
    <button className="primary send" type="submit" disabled={choice?picked===null:built?!chunks.length:!answer.trim()}>ENVIA ↑</button>
