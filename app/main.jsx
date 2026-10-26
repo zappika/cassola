@@ -92,9 +92,13 @@ const {useState,useEffect,useRef}=React;
 function toLatest(el){
  const thread=el?.closest('.conversation-thread'),spacer=thread?.querySelector('.thread-spacer');if(!thread)return;
  if(!spacer)return thread.scrollTo({top:thread.scrollHeight,behavior:'smooth'});
- const messages=thread.querySelectorAll('.chat-message'),target=messages.length>1?messages[messages.length-2]:null;
- const top=target?target.offsetTop-12:0;
- spacer.style.height='0px';spacer.style.height=Math.max(0,thread.clientHeight-(thread.scrollHeight-top))+'px';
+ // A new scene starts its own page; otherwise keep the last two bubbles, or just the last one if both don't fit.
+ const content=thread.scrollHeight-spacer.offsetHeight,fits=el=>content-(el.offsetTop-12)<=thread.clientHeight;
+ const turn=thread.querySelectorAll('.conversation-turn'),scene=turn[turn.length-1]?.querySelector('.scene-break');
+ const messages=[...thread.querySelectorAll('.chat-message')],last=messages.at(-1),before=messages.at(-2);
+ const target=scene&&fits(scene)?scene:before&&fits(before)?before:last;
+ const top=target?Math.max(0,target.offsetTop-12):0;
+ spacer.style.height=Math.max(0,thread.clientHeight-(content-top))+'px';
  thread.scrollTo({top,behavior:'smooth'});
 }
 function Copy({value,english}){return value?<><div lang="ca">{value.ca}</div>{english&&value.en&&<div className="english" lang="en">{value.en}</div>}</>:null;}
@@ -135,7 +139,7 @@ function ConversationTurn({exercise,previous,lesson,submissions,children,onHelp,
  useEffect(()=>{if(active&&stage>0)toLatest(root.current);},[stage]);
  useEffect(()=>{if(stage>=2)return;const t=setTimeout(()=>setStage(stage+1),stage===0?(context.scene?700:0):(context.staff?1500:0));return()=>clearTimeout(t);},[stage]);
  return <section ref={root} className="conversation-turn" aria-label={active?'Current conversation turn':'Earlier conversation turn'}>
- {context.scene&&<div className="scene-message"><Glossed text={context.scene.ca}/></div>}
+ {context.scene&&(previous?<div className="scene-break"><div className="kicker">NOVA ESCENA · NEW SCENE</div><Glossed text={context.scene.ca}/></div>:<div className="scene-message"><Glossed text={context.scene.ca}/></div>)}
  {context.staff&&stage>=1&&<div className="chat-message waiter"><div className="waiter-line"><AudioButton lesson={lesson} staff={exercise.staff} autoPlay={active&&stage===1}/><Glossed text={exercise.staff.ca} onHelp={onHelp}/></div>{submissions.length>0&&<div className="english" lang="en">{exercise.staff.en}</div>}</div>}
  {stage>=2&&<>
  <div className="chat-instruction"><Glossed text={context.instruction.ca}/></div>
