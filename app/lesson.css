@@ -1,1 +1,56 @@
 button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #2840B5;outline-offset:4px}button:disabled{cursor:default}.lesson-shell{max-width:430px;margin:auto;padding:32px 22px;color:#141210;min-height:100vh}.lesson-shell h1{font-size:30px;line-height:1;letter-spacing:-1px;margin:18px 0}.lesson-shell h2{font-size:16px;margin:0}.lesson-shell p{line-height:1.5;margin:12px 0}.lesson-shell button,.lesson-shell textarea{font:inherit}.cover{background:#E83A2F;color:#FFF6E0;padding:22px;border:2.5px solid #141210;border-radius:16px;box-shadow:5px 5px #141210;margin:20px 0}.cover h1{font-size:35px}.panel,.context,.staff,.teaching,.feedback{border:2px solid #141210;border-radius:12px;padding:14px;margin:14px 0;background:#FFF6E0;line-height:1.5}.panel{box-shadow:3px 3px #141210}.kicker{font:500 10px 'IBM Plex Mono',monospace;letter-spacing:1px;margin-bottom:6px}.english{font-size:12px;line-height:1.5;opacity:.8;margin-top:6px}.notice{font:12px/1.5 'IBM Plex Mono',monospace;border-left:4px solid #2840B5;padding:10px 12px;margin:18px 0;background:#fff6e088}.primary{display:block;width:100%;background:#141210;color:#FFD23F;border:2.5px solid #141210;border-radius:12px;padding:16px;font-weight:700!important;box-shadow:4px 4px #E83A2F;margin:22px 0 12px}.primary:disabled{opacity:.45}.small,.chunk{padding:9px 11px;border:2px solid #141210;border-radius:8px;background:#FFF6E0;color:#141210;cursor:pointer}.text-button{background:transparent;border:0;color:#141210;padding:9px 0;text-decoration:underline;font-weight:700!important}.mascot{text-align:center;margin:24px 0}.practice-top{display:flex;gap:12px;align-items:center}.session-progress{flex:1}.session-progress small{font:9px 'IBM Plex Mono',monospace}.progress-track{height:12px;border:2px solid #141210;border-radius:99px;background:#FFF6E0;overflow:hidden}.progress-track>div{height:100%;background:#E83A2F}.session-note{font:10px 'IBM Plex Mono',monospace;opacity:.8}.exercise-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:25px 0 15px}.exercise-heading button{font-size:11px}.goal{font-weight:700;line-height:1.5}.staff{font-size:19px;box-shadow:3px 3px #141210;border-radius:6px 18px 18px 18px}.teaching{font-size:13px;border-style:dashed}.lesson-shell fieldset{border:0;padding:0;margin:20px 0}.lesson-shell legend,.lesson-shell label[for=answer]{font-size:12px;font-weight:700;margin-bottom:10px;display:block}.choices{display:flex;flex-direction:column;gap:10px}.choice{display:flex;gap:12px;align-items:center;padding:14px;border:2.5px solid #141210;border-radius:12px;background:#FFF6E0;box-shadow:3px 3px #141210;cursor:pointer;font-size:14px;font-weight:700;line-height:1.4}.choice:nth-child(odd){transform:rotate(-.3deg)}.choice input{flex:none;accent-color:#2840B5;width:18px;height:18px}.choice.selected,.chunk.selected{background:#141210;color:#FFD23F}.choice:focus-within{outline:3px solid #2840B5;outline-offset:3px}.help,.chunks{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.help{font-size:12px}.assembly{min-height:70px;padding:10px;border:2px dashed #141210;border-radius:12px;display:flex;gap:7px;align-content:start;flex-wrap:wrap}.chunk{font-size:14px!important;box-shadow:2px 2px #141210}.chunk:disabled{opacity:.35}.lesson-shell textarea{width:100%;border:2px solid #141210;border-radius:10px;resize:vertical;padding:12px;background:#FFF6E0;line-height:1.5}.feedback{border-color:#2840B5}.feedback.success{border-color:#1F8A52;border-width:3px}.skip{font-size:11px!important}.summary{text-align:center}.summary p{text-align:left}
+
+/* One question, one action. Keep supporting information quiet. */
+.lesson-shell:has(.exercise){padding-top:24px;padding-bottom:28px}
+.practice-top{gap:16px;margin-bottom:28px}
+.practice-top .text-button{padding:4px;font-size:21px;line-height:1;text-decoration:none}
+.step-count{font:500 11px 'IBM Plex Mono',monospace;white-space:nowrap}
+.exercise-heading{margin:0 0 10px}
+.exercise-heading h2{font-size:23px;line-height:1.2;letter-spacing:-.5px}
+.exercise .situation{font-size:14px;line-height:1.5;margin:0 0 22px;color:#514726}
+.exercise .staff{font-size:23px;line-height:1.35;padding:18px;margin:0 0 24px;box-shadow:4px 4px #141210}
+.exercise fieldset{margin:0}
+.exercise .choices{gap:9px}
+.exercise .choice{padding:12px;font-size:14px;border-width:2px;box-shadow:none;transform:none;gap:10px}
+.exercise .choice.selected{box-shadow:3px 3px #141210;background:#FFF6E0;color:#141210;border-color:#2840B5}
+.exercise .choice input{width:17px;height:17px}
+.exercise .primary{margin-top:24px;padding:14px}
+.exercise .feedback{margin:20px 0 0;padding:14px;font-size:14px;box-shadow:none}
+.exercise .translation{font-size:13px;font-weight:400;line-height:1.45;margin:8px 0 0;opacity:.8}
+.exercise .correction{margin-top:14px;line-height:1.5}
+.exercise .correction>span{font-size:12px}
+.exercise .correction>div[lang=ca]{font-weight:700;margin-top:3px}
+.exercise .undo{font-size:12px;padding:4px 0;text-decoration:none}
+.word-meaning{position:relative;display:inline}
+.lesson-shell .word{display:inline;padding:0;border:0;background:none;color:inherit;font:inherit;line-height:inherit;text-align:inherit;text-decoration:underline dotted;text-underline-offset:4px;text-decoration-thickness:1px;cursor:help}
+.word-tooltip{position:fixed;z-index:20;width:max-content;max-width:200px;background:#141210;color:#FFF6E0;border-radius:8px;padding:9px 12px;font:400 13px/1.4 'Space Grotesk',sans-serif;box-shadow:3px 3px #E83A2F;text-align:left;white-space:normal}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+@media(max-width:360px){.lesson-shell{padding-left:16px;padding-right:16px}.exercise-heading h2{font-size:21px}.exercise .staff{font-size:21px}}
+
+/* Conversation: persistent turns above a changing reply composer. */
+.lesson-shell.conversation-shell{padding:0 18px 24px;max-width:470px}
+.conversation-header{position:sticky;top:0;z-index:10;background:#FFD23F;display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:2px solid #141210}
+.conversation-header .text-button{font-size:24px;text-decoration:none;padding:6px}
+.conversation-header>div{flex:1}.conversation-header strong{display:block;font-size:18px}.conversation-header span{font-size:11px;color:#514726}
+.conversation-thread{padding-top:20px}.conversation-turn{display:flow-root}
+.scene-message{font-size:12px;line-height:1.55;text-align:center;color:#514726;max-width:330px;margin:12px auto 22px;padding:10px 0;border-top:1px solid #14121040;border-bottom:1px solid #14121040}
+.chat-message{width:fit-content;max-width:88%;padding:13px 16px;margin:12px 0;border:2px solid #141210;line-height:1.45;font-size:18px;overflow-wrap:anywhere}
+.chat-message.waiter{background:#FFF6E0;border-radius:4px 18px 18px 18px;box-shadow:3px 3px #141210}
+.chat-message.learner{margin-left:auto;background:#141210;color:#FFF6E0;border-radius:18px 4px 18px 18px;font-size:16px}
+.chat-message .english{font-size:12px}.delivery{font-size:11px;text-align:right;margin:4px 0 16px;color:#514726}.delivery.delivered{color:#175b38}
+.chat-instruction{font-size:12px;line-height:1.5;color:#514726;margin:16px 0}
+.chat-coaching{font-size:13px;line-height:1.5;margin:10px 0 18px;border-left:2px solid #2840B5;padding-left:10px}.chat-coaching p{margin:0}
+.reply-area{margin:18px 0 4px;border-top:2px solid #141210;padding-top:14px;scroll-margin-top:100px}
+.composer-label{font-size:11px;font-weight:700;letter-spacing:.5px;margin-bottom:12px}
+.reply-area .choice{font-weight:500;background:#fff6e0b0}.reply-area .primary.send{margin:14px 0 6px;padding:12px}
+.chat-ending{margin-top:24px;border-top:2px solid #141210;padding-top:20px}.chat-ending p{font-size:14px}
+
+/* Home invites a conversation; details stay out of the main path. */
+.home-shell{max-width:470px;margin:auto;padding:30px 24px 32px;color:#141210}
+.home-brand{display:flex;justify-content:space-between;align-items:center}.home-brand strong{font-size:25px;letter-spacing:-1.3px}.home-brand strong span{font-size:10px;vertical-align:top;margin-left:3px}.home-brand>span{font:10px 'IBM Plex Mono',monospace}
+.home-greeting{display:flex;align-items:center;justify-content:space-between;margin:36px 0 25px;gap:8px}.home-greeting h1{font-size:38px;letter-spacing:-1.5px;line-height:1.02;font-weight:800}.home-greeting em{font-family:'Newsreader',serif;font-weight:500}.home-greeting svg{flex-shrink:0;transform:rotate(7deg)}
+.home-invitation{background:#E83A2F;color:#FFF6E0;border:2.5px solid #141210;border-radius:18px;padding:23px;box-shadow:5px 5px #141210}.home-invitation h2{font-size:30px;letter-spacing:-.8px;line-height:1.05;margin:23px 0 14px}.home-invitation p{font-size:14px;line-height:1.5}.home-start{display:block;width:100%;background:#FFF6E0;color:#141210;border:2px solid #141210;border-radius:10px;box-shadow:3px 3px #141210;font:800 15px 'Space Grotesk',sans-serif;padding:14px;margin-top:23px}.home-invitation small{display:block;font-size:11px;line-height:1.4;margin-top:14px}
+.home-next{margin:30px 0}.home-next-label{font:500 11px 'IBM Plex Mono',monospace;margin-bottom:14px}.home-next-label span{opacity:.65;font-size:10px}.future-scenes{display:flex;gap:10px}.future-scene{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;border:2px solid #141210;border-radius:10px;padding:12px 4px;background:#FFF6E0;font-size:22px;box-shadow:2px 2px #141210}.future-scene>span{font-size:11px;font-weight:700}.future-scene.booking{transform:rotate(-3deg);color:#2840B5}.future-scene.menu{transform:rotate(2deg);color:#1F8A52}.future-scene.bill{transform:rotate(-1deg)}
+.home-footer{border-top:1px solid #14121050;padding-top:10px}.home-footer details{margin-top:10px;font-size:12px}.home-footer summary{cursor:pointer;width:fit-content;color:#514726}.home-footer summary:focus-visible{outline:3px solid #2840B5;outline-offset:4px}.home-footer p{line-height:1.5;margin:12px 0}.home-footer .panel{box-shadow:none;font-size:12px}.home-footer .small{font:inherit}
+@media(max-width:360px){.home-shell{padding:24px 18px}.home-greeting h1{font-size:32px}.home-greeting svg{width:95px}.home-invitation{padding:20px}}
+.audio-control{margin-top:10px}.audio-play{border:0;border-radius:6px;padding:6px 9px;background:#14121010;color:#141210;font:600 12px 'Space Grotesk',sans-serif}.audio-control>span{display:block;font-size:11px;line-height:1.4;margin-top:7px}

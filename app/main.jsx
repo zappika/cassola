@@ -1,3 +1,6 @@
+import {clipFor,player} from '/app/audio.mjs';
+import {conversationHistory,turnContext,sentReply,makeSubmission} from '/app/conversation.mjs';
+import {glossText,responseEnglish} from '/app/language-help.mjs';
 import {readProgress,writeProgress,resetProgress,newSession,makeDraft,saveDraft,finishExercise,progressSummary} from '/app/progress.mjs';
 import {evaluate, evaluateChoice, shuffle, assemble, supportedExercises} from '/app/engine.mjs';
 
@@ -59,190 +62,137 @@ import {evaluate, evaluateChoice, shuffle, assemble, supportedExercises} from '/
       );
     }
 
-    const SCENARIOS = [
-      { ca: 'Entrant al restaurant', en: 'walking in',  available: true, color: C.red,  rot: -1.5 },
-      { ca: 'Reservar per telèfon',  en: 'booking',     available: false,  color: C.blue, rot:  1   },
-      { ca: 'Demanant la carta',     en: 'menu',        available: false, color: C.green,rot: -1   },
-      { ca: 'Demanant el compte',    en: 'check',       available: false,  color: C.ink,  rot:  1.5 },
-    ];
-
-    function getDayLabel() {
-      const days = ['DIUMENGE','DILLUNS','DIMARTS','DIMECRES','DIJOUS','DIVENDRES','DISSABTE'];
-      const now = new Date();
-      const hh = String(now.getHours()).padStart(2,'0');
-      const mm = String(now.getMinutes()).padStart(2,'0');
-      return `${days[now.getDay()]} · ${hh}:${mm}`;
-    }
-
-    function HomeScreen({ onOpen,progressPanel }) {
-      return (
-        <div style={{
-          maxWidth: 430,
-          margin: '0 auto',
-          minHeight: '100vh',
-          background: C.yellow,
-          padding: '54px 22px 40px',
-          color: C.ink,
-          position: 'relative',
-        }}>
-          {/* header */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 14 }}>
-            <div>
-              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 1.2, textTransform: 'uppercase', fontWeight: 700 }}>
-                {getDayLabel()}
-              </div>
-              <div style={{ fontWeight: 800, fontSize: 32, lineHeight: 0.95, marginTop: 4, letterSpacing: -1, transform: 'rotate(-1deg)', transformOrigin: 'left' }}>
-                HOLA<br/>NOIA!
-              </div>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-end' }}>
-              <Sticker bg={C.cream} color={C.ink} rot={4} size={10}>ESBORRANY · DRAFT</Sticker>
-              
-            </div>
-          </div>
-
-          {/* full-flow card */}
-          <div style={{
-            background: C.red, color: C.cream,
-            border: `2.5px solid ${C.ink}`,
-            borderRadius: 16, padding: 16, marginBottom: 16,
-            boxShadow: `5px 5px 0 ${C.ink}`,
-            position: 'relative', overflow: 'hidden',
-          }}>
-            <div style={{ position: 'absolute', right: -14, bottom: -16, opacity: 0.98 }}>
-              <CassolaMascot size={120}/>
-            </div>
-            <Sticker bg={C.yellow} color={C.ink} rot={-3} size={10} style={{ boxShadow: `2px 2px 0 ${C.ink}` }}>
-              MODE COMPLET
-            </Sticker>
-            <div style={{ fontWeight: 800, fontSize: 26, lineHeight: 0.95, marginTop: 10, maxWidth: 190, letterSpacing: -0.8 }}>
-              UN SOPAR DE CAP A PEUS
-            </div>
-            <div style={{ fontSize: 12, opacity: 0.95, marginTop: 8, maxWidth: 180, lineHeight: 1.4 }}>
-              Reserva, entrar, demanar, pagar. Amb curveballs.
-            </div>
-            <button disabled style={{
-              marginTop: 12,
-              background: C.yellow, color: C.ink,
-              border: `2.5px solid ${C.ink}`,
-              borderRadius: 8, padding: '8px 14px',
-              fontSize: 13, fontWeight: 800,
-              boxShadow: `3px 3px 0 ${C.ink}`,
-            }}>
-              Coming soon
-            </button>
-          </div>
-
-          {progressPanel}
-          {/* scenario list */}
-          <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 10, fontWeight: 700 }}>
-            O TRIA UNA ESCENA
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {SCENARIOS.map((s, i) => (
-              <button key={s.en} disabled={!s.available} onClick={() => onOpen(s)} style={{
-                width: "100%", textAlign: "left", color: C.ink, fontFamily: "inherit",
-                background: C.cream,
-                border: `2.5px solid ${C.ink}`,
-                borderRadius: 12, padding: '10px 12px',
-                display: 'flex', alignItems: 'center', gap: 12,
-                boxShadow: `3px 3px 0 ${C.ink}`,
-                transform: `rotate(${s.rot * 0.4}deg)`,
-                cursor: s.available ? 'pointer' : 'default',
-              }}>
-                <div style={{ width: 36, height: 36, borderRadius: 8, background: s.color, border: `2.5px solid ${C.ink}`, flexShrink: 0 }}/>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 14, fontWeight: 800 }}>{s.ca}</div>
-                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: C.muted, textTransform: 'uppercase', letterSpacing: 0.8 }}>
-                    {s.en} · {s.available ? 'Guided practice' : 'Coming soon'}
-                  </div>
-                </div>
-                <div style={{ fontWeight: 800, fontSize: 18 }}>{s.available ? '→' : '—'}</div>
-              </button>
-            ))}
-          </div>
-        </div>
-      );
-    }
+function HomeScreen({onStart,progress,lesson,progressPanel,notice}){
+ const total=supportedExercises(lesson).length,finished=progress.session?.finished.length||0;
+ const resuming=!!progress.session&&finished<total;
+ const revisit=progressSummary(progress).revisit;
+ return <main className="home-shell">
+ <header className="home-brand"><strong>cassola</strong><span>Català a foc lent.</span></header>
+ <div className="home-greeting"><h1>Una mica de<br/><em>conversa?</em></h1><CassolaMascot size={112}/></div>
+ <section className="home-invitation" aria-label="Walking in">
+ <Sticker bg={C.yellow} color={C.ink} size={10}>ENTRANT AL RESTAURANT</Sticker>
+ <h2>La primera paraula?<br/>Bona nit.</h2>
+ <p>A table for two. A little Catalan.<br/>Let’s see where it takes you.</p>
+ <button className="home-start" onClick={onStart}>{resuming?'CONTINUEM →':finished===total?'TORNEM-HI →':'SOM-HI →'}</button>
+ {resuming&&<small>Your conversation is right where you left it.</small>}
+ {!resuming&&revisit&&<small>Back for another chat?</small>}
+ </section>
+ {notice&&<p className="notice" role="status">{notice}</p>}
+ <section className="home-next" aria-label="Coming soon"><div className="home-next-label">Encara al foc <span>· coming soon</span></div>
+ <div className="future-scenes"><span className="future-scene booking">☎<span>Una reserva</span></span><span className="future-scene menu">☰<span>La carta</span></span><span className="future-scene bill">€<span>El compte</span></span></div>
+ </section>
+ <footer className="home-footer"><details><summary>Your practice</summary>{progressPanel}</details>
+ <details><summary>A little about Cassola</summary><p>Small restaurant conversations, with Caçó by your side. Three waiter lines now have trial audio; the rest is text for now. Speaking comes later.</p><p>Our Catalan and trial voices are awaiting native-speaker review.</p></details></footer>
+ </main>;
+}
 
 const {useState,useEffect,useRef}=React;
 function Copy({value,english}){return value?<><div lang="ca">{value.ca}</div>{english&&value.en&&<div className="english" lang="en">{value.en}</div>}</>:null;}
-function Unavailable(){return <div className="notice" lang="en"><strong>Coming soon</strong><br/>Audio, speaking practice and the independent final exchange are not available yet.</div>;}
-function ScenarioScreen({onBack,onStart,resuming,progressPanel}){
- return <div className="lesson-shell"><button className="text-button" onClick={onBack}>← Inici / Home</button>
- <div className="cover"><Sticker bg={C.yellow} color={C.ink} size={10}>WALKING IN</Sticker><h1>ENTRANT AL RESTAURANT</h1><p>Amb reserva, sense reserva o arribant tard.</p><p className="english">With a booking, without one, or arriving late. Learn to ask for repetition, too.</p></div>
- <div className="panel"><strong>Pràctica guiada · Guided practice</strong><p lang="en">Choose replies, build phrases and write in your own words. There are eight guided exercises. Reading replaces listening for now.</p><p lang="en">Draft Catalan awaiting native-speaker review. Progress is saved in this browser when storage is available. It does not sync between devices.</p></div>
- {progressPanel}<Unavailable/><div className="mascot"><CassolaMascot size={105}/></div><button className="primary" onClick={onStart}>{resuming?'CONTINUA / RESUME →':'COMENÇA →'}</button></div>;
+function WordMeaning({text,meaning,onHelp}){
+ const [open,setOpen]=useState(false),[position,setPosition]=useState({}),root=useRef(null),id=React.useId();
+ function show(){const rect=root.current.getBoundingClientRect();setPosition({left:Math.max(12,Math.min(rect.left,window.innerWidth-212)),top:Math.min(rect.bottom+8,window.innerHeight-80)});setOpen(true);onHelp?.();}
+ useEffect(()=>{if(!open)return;const close=event=>{if(!root.current?.contains(event.target))setOpen(false);};document.addEventListener('pointerdown',close);return()=>document.removeEventListener('pointerdown',close);},[open]);
+ return <span className="word-meaning" ref={root} onPointerEnter={event=>{if(event.pointerType==='mouse')show();}} onPointerLeave={()=>setOpen(false)}>
+ <button type="button" className="word" aria-label={text} aria-description="English meaning" aria-expanded={open} aria-describedby={open?id:undefined} onClick={event=>{event.stopPropagation();show();}} onFocus={event=>{if(event.target.matches(':focus-visible'))show();}} onBlur={()=>setOpen(false)} onKeyDown={event=>{if(event.key==='Escape'){setOpen(false);event.stopPropagation();}}}>{text}</button>
+ {open&&<span className="word-tooltip" style={position} id={id} role="tooltip" lang="en">{meaning}</span>}</span>;
 }
-function Exercise({exercise:e,lesson,onFinish,onDraft,draft,index,total}){
- const rule=lesson.answer_rules.find(r=>r.id===e.rule_id);
- const situation=lesson.situations.find(s=>s.id===e.situation_id);
+function Glossed({text,onHelp}){return <span lang="ca">{glossText(text).map((part,i)=>part.meaning?<WordMeaning key={i} {...part} onHelp={onHelp}/>:part.text)}</span>;}
+function SentMessages({exercise,submissions,lesson}){
+ return submissions.map((submission,i)=>{const reply=sentReply(exercise,submission),missing=submission.missing||exercise.options?.find(o=>o.id===submission.input)?.missing_details||[];return <React.Fragment key={i}>
+ <div className="chat-message learner" aria-label={exercise.id==='listen-booking'?'Your interpretation':'Your reply'}><Copy value={reply} english/></div>
+ <div className={'delivery '+(submission.outcome==='communicated'?'delivered':'')}>
+ {submission.outcome==='communicated'?'✓ Missatge comunicat':submission.outcome==='needs_information'?'Falta una dada':submission.outcome==='uncertain'?'Provem-ho d’una altra manera':'Revisa la situació'}
+ </div>
+ {submission.outcome!=='communicated'&&<div className="chat-coaching" lang="en">{submission.outcome==='needs_information'&&missing.length?missing.map(k=><p key={k}>{lesson.feedback.missing_details[k]?.en}</p>):submission.outcome==='uncertain'?'Your answer may be valid. The checker couldn’t recognise it.':(lesson.feedback[submission.outcome]?.en||'Add the missing detail and send again.')}</div>}
+ </React.Fragment>;});
+}
+function AudioButton({lesson,staff}){
+ const clip=clipFor(lesson,staff),id=React.useId();
+ const [state,setState]=useState(player.getState);
+ useEffect(()=>player.subscribe(setState),[]);
+ if(!clip)return null;
+ const status=state.key===id?state.status:'idle',busy=['loading','playing'].includes(status);
+ return <div className="audio-control"><button type="button" className="audio-play" title="Voice trial — native listening review pending" aria-label={`${status==='playing'?'Stop':status==='error'?'Retry audio for':'Play'}: ${staff.ca}`} onClick={()=>busy?player.stop():player.play(id,clip.path)}>{status==='loading'?'◼ Carregant…':status==='playing'?'◼ Atura':status==='error'?'↻ Torna-ho a provar':status==='ended'?'↻ Torna a escoltar':'▶ Escolta'}</button>{status==='error'&&<span role="status" lang="en">Audio unavailable. You can still read the message.</span>}</div>;
+}
+function ConversationTurn({exercise,previous,lesson,submissions,children,onHelp,active=false}){
+ const context=turnContext(lesson,exercise,previous);
+ return <section className="conversation-turn" aria-label={active?'Current conversation turn':'Earlier conversation turn'}>
+ {context.scene&&<div className="scene-message"><Glossed text={context.scene.ca}/></div>}
+ {context.staff&&<div className="chat-message waiter"><Glossed text={exercise.staff.ca} onHelp={onHelp}/><AudioButton lesson={lesson} staff={exercise.staff}/>{submissions.length>0&&<div className="english" lang="en">{exercise.staff.en}</div>}</div>}
+ <div className="chat-instruction"><Glossed text={context.instruction.ca}/></div>
+ <SentMessages exercise={exercise} submissions={submissions} lesson={lesson}/>
+ {submissions.at(-1)?.outcome==='communicated'&&exercise.on_success&&<div className="chat-message waiter"><Copy value={exercise.on_success.acknowledgement} english/><Copy value={exercise.staff} english/></div>}
+ {children}
+ </section>;
+}
+function Exercise({exercise:e,previousExercise,lesson,onFinish,onDraft,draft}){
+ const rule=lesson.answer_rules.find(r=>r.id===e.rule_id),situation=lesson.situations.find(s=>s.id===e.situation_id);
  const [initial]=useState(()=>draft||makeDraft(e,shuffle(e.options||e.chunks||[])));
  const [order]=useState(()=>initial.order.map(id=>(e.options||e.chunks||[]).find(x=>x.id===id)));
  const [picked,setPicked]=useState(initial.picked),[chunks,setChunks]=useState(initial.chunks),[answer,setAnswer]=useState(initial.answer);
- const [english,setEnglish]=useState(initial.english),[hint,setHint]=useState(initial.hint),[model,setModel]=useState(initial.model);
  const [result,setResult]=useState(initial.result),[previous,setPrevious]=useState(initial.previous),[assisted,setAssisted]=useState(initial.assisted);
  const [submissions,setSubmissions]=useState(initial.submissions);
- useEffect(()=>{onDraft({id:e.id,order:initial.order,picked,chunks,answer,english,hint,model,result,previous,assisted,submissions});},[picked,chunks,answer,english,hint,model,result,previous,assisted,submissions]);
- const feedback=useRef(null),heading=useRef(null);
- useEffect(()=>heading.current?.focus(),[]);
- useEffect(()=>{if(result)feedback.current?.focus();},[result]);
- const typed=e.type==='type',built=e.type==='build',choice=!!e.options;
- const success=result?.outcome==='communicated';
+ // Keep legacy flags in persisted drafts so existing sessions resume without migration.
+ useEffect(()=>{onDraft({id:e.id,order:initial.order,picked,chunks,answer,english:initial.english,hint:initial.hint,model:initial.model,result,previous,assisted,submissions});},[picked,chunks,answer,result,previous,assisted,submissions]);
+ const anchor=useRef(null);
+ useEffect(()=>{anchor.current?.scrollIntoView({block:'nearest'});},[submissions.length]);
+ useEffect(()=>{anchor.current?.querySelector('input,textarea,button')?.focus({preventScroll:true});},[]);
+ // Older saved drafts may already have a successful answer awaiting Continue.
+
+ const typed=e.type==='type',built=e.type==='build',choice=!!e.options,success=result?.outcome==='communicated';
+ const help=()=>{if(!success)setAssisted(true);};
  function changed(fn){fn();setResult(null);}
  function check(event){event.preventDefault();if(success)return;
   const next=choice?evaluateChoice(e,picked):evaluate({text:built?assemble(e.chunks,chunks):answer,rule,facts:situation.facts,known:e.known_to_staff||{},previous});
-  setSubmissions([...submissions,{outcome:next.outcome,at:Date.now(),input:choice?picked:built?assemble(e.chunks,chunks):answer,assisted}]);
-  setResult(next);if(next.outcome==='needs_information'&&!choice)setPrevious(next.details);
+  const sent=[...submissions,makeSubmission(e,{picked,chunks,answer,assisted,result:next})];
+  if(next.outcome==='communicated'){
+   onFinish({id:e.id,outcome:'communicated',assisted},{id:e.id,order:initial.order,picked,chunks,answer,english:initial.english,hint:initial.hint,model:initial.model,result:next,previous,assisted,submissions:sent});return;
+  }
+  setSubmissions(sent);setResult(next);if(next.outcome==='needs_information'&&!choice)setPrevious(next.details);
   if(next.outcome!=='communicated')setAssisted(true);
  }
  const modelText=rule.accepted_responses[0].replace(/\{(\w+)\}/g,(_,k)=>situation.facts[k]??'');
- const notes=lesson.teaching_notes.filter(n=>n.before_exercise===e.id);
- return <section aria-label="Exercise">
-  <div className="exercise-heading"><h2 ref={heading} tabIndex="-1">{index+1}/{total} · {built?'Construeix':typed?'Escriu':e.type==='listen_choice'?'Llegeix':'Tria'}</h2><button className="small" aria-pressed={english} onClick={()=>{setEnglish(!english);if(!english)setAssisted(true);}}>English help {english?'on':'off'}</button></div>
-  <div className="context"><div className="kicker">LA SITUACIÓ</div><Copy value={situation.context} english={english}/></div>
-  <div className="goal"><Copy value={rule.goal} english={english}/>{e.instruction&&<p><Copy value={e.id==='listen-booking'?{ca:'Llegeix la pregunta.',en:'Read the staff’s question.'}:e.instruction} english={english}/></p>}</div>
-  {e.type==='listen_choice'&&<p className="notice" lang="en">Audio coming soon — read the staff’s words for this exercise. This does not assess listening.</p>}
-  {notes.map(n=><div className="teaching" key={n.id}><Copy value={n.text} english={english}/></div>)}
-  <div className="staff"><div className="kicker">PERSONAL DEL RESTAURANT</div><Copy value={e.staff} english={english}/></div>
-  <form onSubmit={check}>
-   {choice&&<fieldset disabled={success}><legend>La teva resposta</legend><div className="choices">{order.map(o=><label key={o.id} className={'choice '+(picked===o.id?'selected':'')}><input type="radio" name={e.id} value={o.id} checked={picked===o.id} onChange={()=>changed(()=>setPicked(o.id))}/><span><Copy value={o.text} english={english}/></span></label>)}</div></fieldset>}
-   {built&&<fieldset disabled={success}><legend>Construeix la resposta</legend><p className="english" lang="en">Choose chunks in order. You don’t have to use them all. Select a chosen chunk to remove it.</p><div className="assembly" aria-live="polite">{chunks.length?chunks.map((id,i)=><button className="chunk selected" type="button" key={id} aria-label={`Remove chunk ${i+1}: ${e.chunks.find(c=>c.id===id).text}`} onClick={()=>changed(()=>setChunks(chunks.filter(c=>c!==id)))}>{e.chunks.find(c=>c.id===id).text} ×</button>):<span className="english">La teva frase…</span>}</div><div className="chunks">{order.map(c=><button className="chunk" type="button" key={c.id} disabled={success||chunks.includes(c.id)} onClick={()=>changed(()=>setChunks([...chunks,c.id]))}>{c.text}</button>)}</div><button className="small" type="button" disabled={!chunks.length||success} onClick={()=>changed(()=>setChunks(chunks.slice(0,-1)))}>Desfés / Undo</button></fieldset>}
-   {typed&&<div><label htmlFor="answer">La teva resposta</label><textarea id="answer" value={answer} disabled={success} maxLength={500} rows={3} spellCheck lang="ca" onChange={event=>changed(()=>setAnswer(event.target.value))}/><p className="english" lang="en">Use your own words. Formal and longer answers are welcome.</p></div>}
-   <div className="help"><button className="small" type="button" aria-expanded={hint} onClick={()=>{setHint(!hint);setAssisted(true);}}>Pista / Hint</button><button className="small" type="button" aria-expanded={model} onClick={()=>{setModel(!model);setAssisted(true);}}>Exemple / Example</button></div>
-   {hint&&<div className="teaching"><Copy value={rule.hint} english={english}/></div>}{model&&<div className="teaching" lang="ca">{modelText}</div>}
-   {result&&<div className={'feedback '+(success?'success':'')} ref={feedback} tabIndex="-1" role="status"><strong>{success?'Missatge comunicat':result.outcome==='needs_information'?'Falta una dada':result.outcome==='uncertain'?'Pots dir-ho d’una altra manera?':'Revisa la situació'}</strong>
-    {result.outcome==='needs_information'?result.missing_details.map(k=><p key={k}><Copy value={lesson.feedback.missing_details[k]} english={english}/></p>):<p><Copy value={lesson.feedback[result.outcome]} english={english}/></p>}
-    {result.outcome==='uncertain'&&<p className="english" lang="en">Your answer may be valid. This draft checker cannot assess it confidently. Try rephrasing or use an example.</p>}
-    {result.outcome==='needs_information'&&!choice&&<p className="english" lang="en">You can add just the missing detail, or edit your full answer.</p>}
-    {success&&e.on_success&&<div className="staff"><Copy value={e.on_success.acknowledgement} english={english}/><Copy value={e.staff} english={english}/></div>}
-   </div>}
-   {!success&&<button className="primary" type="submit" disabled={choice?picked===null:built?!chunks.length:!answer.trim()}>COMPROVA</button>}
-  </form>
-  {success?<button className="primary" onClick={()=>onFinish({id:e.id,outcome:'communicated',assisted})}>CONTINUA →</button>:<button className="text-button skip" onClick={()=>onFinish({id:e.id,outcome:'skipped',assisted:true})}>Deixa-ho per més tard / Skip for now</button>}
- </section>;
+ return <ConversationTurn exercise={e} previous={previousExercise} lesson={lesson} submissions={submissions} onHelp={help} active>
+  <div ref={anchor} className="reply-area exercise">
+  {!success&&<form onSubmit={check} aria-label="Compose a reply">
+  <div className="composer-label">{built?'Construeix la resposta':typed?'Escriu la resposta':'Tria la resposta'}</div>
+   {choice&&<fieldset><legend className="sr-only">La teva resposta</legend><div className="choices">{order.map(o=><div key={o.id} className={'choice '+(picked===o.id?'selected':'')} onClick={event=>{if(!success&&!event.target.closest('button'))changed(()=>setPicked(o.id));}}><input type="radio" name={e.id} aria-label={o.text.ca} value={o.id} disabled={success} checked={picked===o.id} onChange={()=>changed(()=>setPicked(o.id))}/><div><Glossed text={o.text.ca} onHelp={help}/></div></div>)}</div></fieldset>}
+   {built&&<fieldset disabled={success}><legend className="sr-only">Construeix la resposta</legend><div className="assembly" aria-live="polite">{chunks.length?chunks.map((id,i)=><button className="chunk selected" type="button" key={id} aria-label={`Remove chunk ${i+1}: ${e.chunks.find(c=>c.id===id).text}`} onClick={()=>changed(()=>setChunks(chunks.filter(c=>c!==id)))}>{e.chunks.find(c=>c.id===id).text} ×</button>):<span className="english">La teva frase…</span>}</div><div className="chunks">{order.map(c=><button className="chunk" type="button" key={c.id} disabled={success||chunks.includes(c.id)} onClick={()=>changed(()=>setChunks([...chunks,c.id]))}>{c.text}</button>)}</div><button className="text-button undo" type="button" disabled={!chunks.length||success} onClick={()=>changed(()=>setChunks(chunks.slice(0,-1)))}>↶ Desfés</button></fieldset>}
+   {typed&&<div><label className="sr-only" htmlFor="answer">La teva resposta</label><textarea id="answer" placeholder="Escriu la teva resposta…" value={answer} disabled={success} maxLength={500} rows={3} spellCheck lang="ca" onChange={event=>changed(()=>setAnswer(event.target.value))}/></div>}
+   {result&&!choice&&<div className="chat-coaching"><span lang="en">You could say:</span> <span lang="ca">{modelText}</span></div>}
+   <button className="primary send" type="submit" disabled={choice?picked===null:built?!chunks.length:!answer.trim()}>ENVIA ↑</button>
+  </form>}
+  {success&&<button className="primary" onClick={()=>onFinish({id:e.id,outcome:'communicated',assisted})}>Continua la conversa →</button>}
+  </div>
+ </ConversationTurn>;
 }
+
 function PracticeScreen({lesson,onExit,progress,onChange,storageNotice}){
  const exercises=supportedExercises(lesson),attempts=progress.session.finished,index=attempts.length;
- const complete=attempts.filter(a=>a.outcome==='communicated').length;
- function next(attempt){onChange(p=>finishExercise(p,attempt,lesson));window.scrollTo(0,0);}
- return <div className="lesson-shell"><div className="practice-top"><button className="text-button" onClick={onExit} aria-label="Exit practice">✕</button><div className="session-progress"><div className="progress-track" role="progressbar" aria-label="Guided exercises visited" aria-valuenow={index} aria-valuemin={0} aria-valuemax={exercises.length}><div style={{width:`${index/exercises.length*100}%`}}/></div><small>{index}/{exercises.length} visited · {complete} communicated</small></div><Sticker bg={C.cream} color={C.ink} size={9}>DRAFT</Sticker></div>
- {storageNotice&&<p className="notice" role="status">{storageNotice}</p>}<p className="session-note" lang="en">Guided practice · progress saves in this browser when storage is available.</p>
- {index<exercises.length?<Exercise key={exercises[index].id} exercise={exercises[index]} lesson={lesson} draft={progress.session.draft} onDraft={draft=>onChange(p=>saveDraft(p,draft))} onFinish={next} index={index} total={exercises.length}/>:<div className="summary"><CassolaMascot size={120}/><h1>PRÀCTICA FETA.</h1><p lang="en">You communicated the goal in {complete} of {exercises.length} guided exercises. {attempts.filter(a=>a.outcome==='skipped').length} skipped.</p><p lang="en">This was guided practice, not an independent assessment. {attempts.filter(a=>a.assisted&&a.outcome==='communicated').length} successful exercises used help or corrective feedback.</p><Unavailable/><button className="primary" onClick={()=>onChange(p=>({...p,session:newSession()}))}>TORNA-HI / PRACTISE AGAIN</button><button className="text-button" onClick={onExit}>Inici / Home</button></div>}
- </div>;
+ const history=conversationHistory(lesson,progress),end=useRef(null);
+ useEffect(()=>{end.current?.scrollIntoView({block:'nearest'});player.stop();return()=>player.stop();},[index]);
+ useEffect(()=>{const pause=()=>{if(document.hidden)player.stop();};document.addEventListener('visibilitychange',pause);return()=>document.removeEventListener('visibilitychange',pause);},[]);
+ function next(attempt,snapshot){onChange(p=>finishExercise(snapshot?saveDraft(p,snapshot):p,attempt,lesson));}
+ return <div className="lesson-shell conversation-shell">
+ <header className="conversation-header"><button className="text-button" onClick={onExit} aria-label="Exit conversation">←</button><div><strong>Al restaurant</strong><span>amb en Caçó</span></div><CassolaMascot size={42}/></header>
+ {storageNotice&&<p className="notice" role="status">{storageNotice}</p>}
+ <div className="conversation-thread" aria-label="Restaurant conversation">
+ {history.map(({exercise,step,submissions},i)=><ConversationTurn key={exercise.id} exercise={exercise} previous={exercises[i-1]} lesson={lesson} submissions={submissions}>{!submissions.length&&<p className="chat-instruction" lang="en">{step.outcome==='skipped'?'Previously left for later.':'Earlier reply was not saved.'}</p>}</ConversationTurn>)}
+ {index<exercises.length?<Exercise key={exercises[index].id} exercise={exercises[index]} previousExercise={exercises[index-1]} lesson={lesson} draft={progress.session.draft} onDraft={draft=>onChange(p=>saveDraft(p,draft))} onFinish={next}/>:<div className="chat-ending"><h2>Fins aviat!</h2><p lang="en">You communicated {attempts.filter(a=>a.outcome==='communicated').length} arrival goals with support. An independent conversation comes later.</p><button className="primary" onClick={()=>onChange(p=>({...p,session:newSession()}))}>TORNEM A PARLAR →</button><button className="text-button" onClick={onExit}>Inici / Home</button></div>}
+ <div ref={end}/>
+ </div></div>;
 }
-function ProgressPanel({progress,lesson,onReset,notice}){
+function ProgressPanel({progress,lesson,onReset}){
  const [confirm,setConfirm]=useState(false);
  const stats=progressSummary(progress),visited=progress.session?.finished.length||0,total=supportedExercises(lesson).length;
- return <div className="panel" lang="en"><strong>Your Walking in practice</strong>
- <p>{stats.communicated}/{total} goals communicated in guided practice · {stats.runs} runs finished · {stats.submissions} answers checked.</p>
- {progress.session&&<p>Current run: {visited}/{total} exercises visited{visited<total?' — ready to resume.':'.'}</p>}
- {progress.evidence.status&&<p>Practised with support. Independent completion is not available yet.</p>}
- {stats.revisit&&<p><strong>Revisit later · Ready for another practice</strong><br/>It has been at least 24 hours. Your previous practice still counts.</p>}
+ return <div className="panel" lang="en"><strong>Walking in</strong>
+ <p>{stats.communicated}/{total} goals practised · {stats.runs} conversations finished.</p>
+ {progress.session&&<p>Current run: {visited}/{total} replies finished{visited<total?' — pick up anytime.':'.'}</p>}
+
+ {stats.revisit&&<p>Ready for another chat? Your earlier practice is saved.</p>}
  {progress.lastActivity!==null&&<p className="english">Last activity: {new Date(progress.lastActivity).toLocaleString()}</p>}
  {progress.previousVersions.map((v,i)=><p className="english" key={i}>Earlier lesson {v.version}: {v.evidence.communicated.length} guided goals, {v.evidence.runs} runs. Kept separately from this version.</p>)}
- {notice&&<p className="notice" role="status">{notice}</p>}
- <p className="english">Saved only in this browser. No recordings or account data.</p>
+ <p className="english">Saved in this browser.</p>
  {confirm?<div><p>Erase all Walking in learner progress in this browser? Native reviews are unaffected.</p><button className="small" onClick={()=>{onReset();setConfirm(false);}}>Erase progress</button> <button className="small" onClick={()=>setConfirm(false)}>Cancel</button></div>:<button className="small" onClick={()=>setConfirm(true)}>Reset learner progress</button>}
  </div>;
 }
@@ -255,9 +205,8 @@ function App(){
  function reset(){const result=resetProgress(storage,lesson);progressRef.current=result.progress;setProgress(result.progress);setNotice('');setStorageError(result.removed?'':'Progress was cleared for this session, but browser storage could not be erased. Older progress may return after reload.');}
  useEffect(()=>{const controller=new AbortController();setError('');fetch('/content/walking-in.v2.json',{signal:controller.signal}).then(r=>{if(!r.ok)throw Error('Lesson unavailable');return r.json();}).then(data=>{if(data.schema_version!==2||!Array.isArray(data.exercises)||!Array.isArray(data.answer_rules)||!Array.isArray(data.situations))throw Error('Invalid lesson');const loaded=readProgress(storage,data);progressRef.current=loaded.progress;setProgress(loaded.progress);setNotice(loaded.notice);setLesson(data);}).catch(e=>{if(e.name!=='AbortError')setError('We couldn’t load the lesson. Please try again.');});return()=>controller.abort();},[reload]);
  if(!lesson||!progress)return <div className="lesson-shell" role="status"><p>{error||'Carregant… / Loading…'}</p>{error&&<button className="primary" onClick={()=>setReload(reload+1)}>Try again</button>}</div>;
- const panel=<ProgressPanel progress={progress} lesson={lesson} onReset={reset} notice={storageError||notice}/>;
+ const panel=<ProgressPanel progress={progress} lesson={lesson} onReset={reset}/>;
  if(screen==='practice')return <PracticeScreen lesson={lesson} progress={progress} onChange={change} storageNotice={storageError||notice} onExit={()=>setScreen('home')}/>;
- if(screen==='scenario')return <ScenarioScreen progressPanel={panel} resuming={!!progress.session} onBack={()=>setScreen('home')} onStart={()=>{if(!progressRef.current.session)change(p=>({...p,session:newSession(),lastActivity:Date.now()}));setScreen('practice');}}/>;
- return <HomeScreen progressPanel={panel} onOpen={s=>{if(s.available)setScreen('scenario');}}/>;
+ return <HomeScreen progress={progress} lesson={lesson} progressPanel={panel} notice={storageError||notice} onStart={()=>{if(!progressRef.current.session||progressRef.current.session.finished.length===supportedExercises(lesson).length)change(p=>({...p,session:newSession(),lastActivity:Date.now()}));setScreen('practice');}}/>;
 }
 ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
