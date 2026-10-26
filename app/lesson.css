@@ -63,3 +63,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
 .thread-spacer{flex:none}
 .scene-break{margin:36px 0 18px;padding:14px 16px;border:2px dashed #141210;border-radius:12px;font-size:14px;line-height:1.5;text-align:center}.scene-break .kicker{font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.08em;margin-bottom:6px}
 .chat-message.learner.failed{background:transparent;color:#141210;border-style:dashed;opacity:.7}
+.speech{display:flex;flex-direction:column;align-items:center;gap:12px}
+.speech-transcript{align-self:stretch;min-height:56px;padding:14px 16px;border:2px dashed #141210;border-radius:12px;font-size:17px;line-height:1.4;text-align:center}
+.speech-transcript.empty{font-size:13px;color:#514726}
+.mic{width:68px;height:68px;border-radius:99px;border:2.5px solid #141210;background:#FFF6E0;color:#141210;display:grid;place-items:center;box-shadow:3px 3px #141210;cursor:pointer}
+.mic.listening{background:#E83A2F;color:#FFF6E0;animation:mic-pulse 1.2s ease-in-out infinite}
+@keyframes mic-pulse{50%{box-shadow:3px 3px #141210,0 0 0 10px #E83A2F33}}
+.speech-error{font-size:12px;margin:0;text-align:center}

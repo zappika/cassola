@@ -133,6 +133,32 @@ function AudioButton({lesson,staff,autoPlay=false}){
  const status=state.key===id?state.status:'idle',busy=['loading','playing'].includes(status);
  return <button type="button" className={'audio-play '+status} title="Voice trial — native listening review pending" aria-label={`${busy?'Stop':'Play'}: ${staff.ca}`} onClick={()=>{manual.current=true;busy?player.stop():player.play(id,clip.path);}}>{SPEAKER}{status==='error'&&manual.current&&<span className="sr-only" role="status">Audio unavailable.</span>}</button>;
 }
+const Recognition=typeof window!=='undefined'&&(window.SpeechRecognition||window.webkitSpeechRecognition);
+const setSession=type=>{try{if(navigator.audioSession)navigator.audioSession.type=type;}catch{}};
+// Say the answer out loud; the transcript is checked like a typed answer. Typing stays as a fallback.
+function SpeechInput({value,onChange,disabled}){
+ const [listening,setListening]=useState(false),[typing,setTyping]=useState(!Recognition),[error,setError]=useState('');
+ const rec=useRef(null);
+ useEffect(()=>()=>rec.current?.abort(),[]);
+ function start(){
+  player.stop();setSession('play-and-record');
+  const r=new Recognition();r.lang='ca-ES';r.interimResults=true;r.continuous=false;
+  r.onresult=event=>onChange([...event.results].map(x=>x[0].transcript).join(' ').trim());
+  r.onerror=event=>setError(['not-allowed','service-not-allowed'].includes(event.error)?'Microphone access is blocked. You can type instead.':event.error==='no-speech'?'I didn’t hear anything. Try again.':'Speech recognition didn’t work. Try again, or type instead.');
+  r.onend=()=>{setListening(false);rec.current=null;setSession('playback');};
+  rec.current=r;setError('');setListening(true);
+  try{r.start();}catch{setListening(false);setError('Speech recognition didn’t work. Try again, or type instead.');}
+ }
+ if(typing)return <div><label className="sr-only" htmlFor="answer">La teva resposta</label><textarea id="answer" placeholder="Escriu la teva resposta…" value={value} disabled={disabled} maxLength={500} rows={3} spellCheck lang="ca" onChange={event=>onChange(event.target.value)}/>{Recognition&&<button type="button" className="text-button undo" onClick={()=>setTyping(false)}>🎙 Parla-ho / Speak instead</button>}</div>;
+ return <div className="speech">
+  <div className={'speech-transcript'+(value?'':' empty')} lang="ca" aria-live="polite">{value||(listening?'T’escolto…':'Prem el micròfon i parla.')}</div>
+  <button type="button" className={'mic'+(listening?' listening':'')} disabled={disabled} aria-label={listening?'Stop listening':'Speak your answer'} onClick={()=>listening?rec.current?.stop():start()}>
+   <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+  </button>
+  {error&&<p className="speech-error" role="status" lang="en">{error}</p>}
+  <button type="button" className="text-button undo" onClick={()=>{rec.current?.abort();setTyping(true);}}>⌨ Escriu-ho / Type instead</button>
+ </div>;
+}
 function ConversationTurn({exercise,previous,lesson,submissions,children,onHelp,active=false,retrying=false}){
  const context=turnContext(lesson,exercise,previous);
  // New turns reveal one bubble at a time: scene, waiter, then your reply.
@@ -183,10 +209,10 @@ function Exercise({exercise:e,previousExercise,lesson,onFinish,onDraft,draft}){
   <div className="thread-spacer" aria-hidden="true"/>
   <div ref={attach} className="reply-area exercise">
   {!success&&<form onSubmit={check} aria-label="Compose a reply">
-  <div className="composer-label">{built?'Construeix la resposta':typed?'Escriu la resposta':'Tria la resposta'}</div>
+  <div className="composer-label">{built?'Construeix la resposta':typed?'Digues la resposta':'Tria la resposta'}</div>
    {choice&&<fieldset><legend className="sr-only">La teva resposta</legend><div className="choices">{order.map(o=><div key={o.id} className={'choice '+(picked===o.id?'selected':'')} onClick={event=>{if(!success&&!event.target.closest('button'))changed(()=>setPicked(o.id));}}><input type="radio" name={e.id} aria-label={o.text.ca} value={o.id} disabled={success} checked={picked===o.id} onChange={()=>changed(()=>setPicked(o.id))}/><div><Glossed text={o.text.ca} onHelp={help}/></div></div>)}</div></fieldset>}
    {built&&<fieldset disabled={success}><legend className="sr-only">Construeix la resposta</legend><div className="assembly" aria-live="polite">{chunks.length?chunks.map((id,i)=><button className="chunk selected" type="button" key={id} aria-label={`Remove chunk ${i+1}: ${e.chunks.find(c=>c.id===id).text}`} onClick={()=>changed(()=>setChunks(chunks.filter(c=>c!==id)))}>{e.chunks.find(c=>c.id===id).text}</button>):<span className="english">La teva frase…</span>}</div><div className="chunks">{order.map(c=><button className="chunk" type="button" key={c.id} disabled={success||chunks.includes(c.id)} onClick={()=>changed(()=>setChunks([...chunks,c.id]))}>{c.text}</button>)}</div><button className="text-button undo" type="button" disabled={!chunks.length||success} onClick={()=>changed(()=>setChunks(chunks.slice(0,-1)))}>↶ Desfés</button></fieldset>}
-   {typed&&<div><label className="sr-only" htmlFor="answer">La teva resposta</label><textarea id="answer" placeholder="Escriu la teva resposta…" value={answer} disabled={success} maxLength={500} rows={3} spellCheck lang="ca" onChange={event=>changed(()=>setAnswer(event.target.value))}/></div>}
+   {typed&&<SpeechInput value={answer} disabled={success} onChange={text=>changed(()=>setAnswer(text))}/>}
    {result&&!choice&&<div className="chat-coaching"><span lang="en">You could say:</span> <span lang="ca">{modelText}</span></div>}
    <button className="primary send" type="submit" disabled={choice?picked===null:built?!chunks.length:!answer.trim()}>ENVIA ↑</button>
   </form>}
