@@ -93,10 +93,10 @@ function toLatest(el){
  const thread=el?.closest('.conversation-thread'),spacer=thread?.querySelector('.thread-spacer');if(!thread)return;
  if(!spacer)return thread.scrollTo({top:thread.scrollHeight,behavior:'smooth'});
  // A new scene starts its own page; otherwise keep the last two bubbles, or just the last one if both don't fit.
- const content=thread.scrollHeight-spacer.offsetHeight,fits=el=>content-(el.offsetTop-12)<=thread.clientHeight;
+ const end=thread.lastElementChild,content=end.offsetTop+end.offsetHeight+12-spacer.offsetHeight,fits=el=>content-(el.offsetTop-12)<=thread.clientHeight;
  const turn=thread.querySelectorAll('.conversation-turn'),scene=turn[turn.length-1]?.querySelector('.scene-break');
  const messages=[...thread.querySelectorAll('.chat-message')],last=messages.at(-1),before=messages.at(-2);
- const target=scene&&fits(scene)?scene:before&&fits(before)?before:last;
+ const target=messages.length<2&&fits(thread.firstElementChild)?null:scene&&fits(scene)?scene:before&&fits(before)?before:last;
  const top=target?Math.max(0,target.offsetTop-12):0;
  spacer.style.height=Math.max(0,thread.clientHeight-(content-top))+'px';
  thread.scrollTo({top,behavior:'smooth'});
@@ -111,14 +111,16 @@ function WordMeaning({text,meaning,onHelp}){
  {open&&<span className="word-tooltip" style={position} id={id} role="tooltip" lang="en">{meaning}</span>}</span>;
 }
 function Glossed({text,onHelp}){return <span lang="ca">{glossText(text).map((part,i)=>part.meaning?<WordMeaning key={i} {...part} onHelp={onHelp}/>:part.text)}</span>;}
-function SentMessages({exercise,submissions,lesson}){
- return submissions.map((submission,i)=>{const reply=sentReply(exercise,submission),missing=submission.missing||exercise.options?.find(o=>o.id===submission.input)?.missing_details||[];return <React.Fragment key={i}>
- <div className="chat-message learner" aria-label={exercise.id==='listen-booking'?'Your interpretation':'Your reply'}><Copy value={reply} english/></div>
- {submission.outcome!=='communicated'&&<div className="delivery">
- {submission.outcome==='needs_information'?'Falta una dada':submission.outcome==='uncertain'?'Provem-ho d’una altra manera':'Revisa la situació'}
- </div>}
- {submission.outcome!=='communicated'&&<div className="chat-coaching" lang="en">{submission.outcome==='needs_information'&&missing.length?missing.map(k=><p key={k}>{lesson.feedback.missing_details[k]?.en}</p>):submission.outcome==='uncertain'?'Your answer may be valid. The checker couldn’t recognise it.':(lesson.feedback[submission.outcome]?.en||'Add the missing detail and send again.')}</div>}
- </React.Fragment>;});
+// Only the reply that stands is shown: a failed attempt stays until the learner edits it, then the retry replaces it.
+function SentMessages({exercise,submissions,lesson,retrying=false}){
+ const submission=submissions.at(-1);
+ if(!submission||(submission.outcome!=='communicated'&&!retrying))return null;
+ const failed=submission.outcome!=='communicated',reply=sentReply(exercise,submission),missing=submission.missing||exercise.options?.find(o=>o.id===submission.input)?.missing_details||[];
+ return <>
+ <div className={'chat-message learner'+(failed?' failed':'')} aria-label={exercise.id==='listen-booking'?'Your interpretation':'Your reply'}><Copy value={reply}/></div>
+ {failed&&<div className="delivery">Torna-ho a provar · Try again</div>}
+ {failed&&<div className="chat-coaching" lang="en">{submission.outcome==='needs_information'&&missing.length?missing.map(k=><p key={k}>{lesson.feedback.missing_details[k]?.en}</p>):submission.outcome==='uncertain'?'Your answer may be valid. The checker couldn’t recognise it.':(lesson.feedback[submission.outcome]?.en||'Add the missing detail and send again.')}</div>}
+ </>;
 }
 const SPEAKER=<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>;
 function AudioButton({lesson,staff,autoPlay=false}){
@@ -131,7 +133,7 @@ function AudioButton({lesson,staff,autoPlay=false}){
  const status=state.key===id?state.status:'idle',busy=['loading','playing'].includes(status);
  return <button type="button" className={'audio-play '+status} title="Voice trial — native listening review pending" aria-label={`${busy?'Stop':'Play'}: ${staff.ca}`} onClick={()=>{manual.current=true;busy?player.stop():player.play(id,clip.path);}}>{SPEAKER}{status==='error'&&manual.current&&<span className="sr-only" role="status">Audio unavailable.</span>}</button>;
 }
-function ConversationTurn({exercise,previous,lesson,submissions,children,onHelp,active=false}){
+function ConversationTurn({exercise,previous,lesson,submissions,children,onHelp,active=false,retrying=false}){
  const context=turnContext(lesson,exercise,previous);
  // New turns reveal one bubble at a time: scene, waiter, then your reply.
  const [stage,setStage]=useState(active&&!submissions.length?0:2);
@@ -140,11 +142,11 @@ function ConversationTurn({exercise,previous,lesson,submissions,children,onHelp,
  useEffect(()=>{if(stage>=2)return;const t=setTimeout(()=>setStage(stage+1),stage===0?(context.scene?700:0):(context.staff?1500:0));return()=>clearTimeout(t);},[stage]);
  return <section ref={root} className="conversation-turn" aria-label={active?'Current conversation turn':'Earlier conversation turn'}>
  {context.scene&&(previous?<div className="scene-break"><div className="kicker">NOVA ESCENA · NEW SCENE</div><Glossed text={context.scene.ca}/></div>:<div className="scene-message"><Glossed text={context.scene.ca}/></div>)}
- {context.staff&&stage>=1&&<div className="chat-message waiter"><div className="waiter-line"><AudioButton lesson={lesson} staff={exercise.staff} autoPlay={active&&stage===1}/><Glossed text={exercise.staff.ca} onHelp={onHelp}/></div>{submissions.length>0&&<div className="english" lang="en">{exercise.staff.en}</div>}</div>}
+ {context.staff&&stage>=1&&<div className="chat-message waiter"><div className="waiter-line"><AudioButton lesson={lesson} staff={exercise.staff} autoPlay={active&&stage===1}/><Glossed text={exercise.staff.ca} onHelp={onHelp}/></div></div>}
  {stage>=2&&<>
  <div className="chat-instruction"><Glossed text={context.instruction.ca}/></div>
- <SentMessages exercise={exercise} submissions={submissions} lesson={lesson}/>
- {submissions.at(-1)?.outcome==='communicated'&&exercise.on_success&&<div className="chat-message waiter"><Copy value={exercise.on_success.acknowledgement} english/><Copy value={exercise.staff} english/></div>}
+ <SentMessages exercise={exercise} submissions={submissions} lesson={lesson} retrying={retrying}/>
+ {submissions.at(-1)?.outcome==='communicated'&&exercise.on_success&&<div className="chat-message waiter"><Copy value={exercise.on_success.acknowledgement}/><Copy value={exercise.staff}/></div>}
  {children}
  </>}
  </section>;
@@ -177,7 +179,7 @@ function Exercise({exercise:e,previousExercise,lesson,onFinish,onDraft,draft}){
   if(next.outcome!=='communicated')setAssisted(true);
  }
  const modelText=rule.accepted_responses[0].replace(/\{(\w+)\}/g,(_,k)=>situation.facts[k]??'');
- return <ConversationTurn exercise={e} previous={previousExercise} lesson={lesson} submissions={submissions} onHelp={help} active>
+ return <ConversationTurn exercise={e} previous={previousExercise} lesson={lesson} submissions={submissions} onHelp={help} active retrying={!!result&&!success}>
   <div className="thread-spacer" aria-hidden="true"/>
   <div ref={attach} className="reply-area exercise">
   {!success&&<form onSubmit={check} aria-label="Compose a reply">
@@ -196,6 +198,11 @@ function Exercise({exercise:e,previousExercise,lesson,onFinish,onDraft,draft}){
 function PracticeScreen({lesson,onExit,progress,onChange,storageNotice}){
  const exercises=supportedExercises(lesson),attempts=progress.session.finished,index=attempts.length;
  const history=conversationHistory(lesson,progress),end=useRef(null);
+ // Each scene is its own conversation: show only this scene's turns, and pause between scenes.
+ const scene=exercises[Math.min(index,exercises.length-1)].situation_id;
+ const [open,setOpen]=useState(scene),between=index<exercises.length&&index>0&&scene!==open;
+ const last=between?index-1:Math.min(index,exercises.length-1);
+ let first=last;while(first>0&&exercises[first-1].situation_id===exercises[last].situation_id)first--;
  useEffect(()=>{toLatest(end.current);player.stop();return()=>player.stop();},[index]);
  useEffect(()=>{const pause=()=>{if(document.hidden)player.stop();};document.addEventListener('visibilitychange',pause);return()=>document.removeEventListener('visibilitychange',pause);},[]);
  function next(attempt,snapshot){onChange(p=>finishExercise(snapshot?saveDraft(p,snapshot):p,attempt,lesson));}
@@ -203,8 +210,8 @@ function PracticeScreen({lesson,onExit,progress,onChange,storageNotice}){
  <header className="conversation-header"><button className="text-button" onClick={onExit} aria-label="Exit conversation">←</button><div><strong>Al restaurant</strong><span>amb en Caçó</span></div><CassolaMascot size={42}/></header>
  {storageNotice&&<p className="notice" role="status">{storageNotice}</p>}
  <div className="conversation-thread" aria-label="Restaurant conversation">
- {history.map(({exercise,step,submissions},i)=><ConversationTurn key={exercise.id} exercise={exercise} previous={exercises[i-1]} lesson={lesson} submissions={submissions}>{!submissions.length&&<p className="chat-instruction" lang="en">{step.outcome==='skipped'?'Previously left for later.':'Earlier reply was not saved.'}</p>}</ConversationTurn>)}
- {index<exercises.length?<Exercise key={exercises[index].id} exercise={exercises[index]} previousExercise={exercises[index-1]} lesson={lesson} draft={progress.session.draft} onDraft={draft=>onChange(p=>saveDraft(p,draft))} onFinish={next}/>:<div className="chat-ending"><h2>Fins aviat!</h2><p lang="en">You communicated {attempts.filter(a=>a.outcome==='communicated').length} arrival goals with support. An independent conversation comes later.</p><button className="primary" onClick={()=>onChange(p=>({...p,session:newSession()}))}>TORNEM A PARLAR →</button><button className="text-button" onClick={onExit}>Inici / Home</button></div>}
+ {history.map(({exercise,step,submissions},i)=>i>=first&&<ConversationTurn key={exercise.id} exercise={exercise} previous={i>0&&exercises[i-1].situation_id===exercise.situation_id?exercises[i-1]:undefined} lesson={lesson} submissions={submissions}>{!submissions.length&&<p className="chat-instruction" lang="en">{step.outcome==='skipped'?'Previously left for later.':'Earlier reply was not saved.'}</p>}</ConversationTurn>)}
+ {between?<div className="chat-ending"><h2>Escena feta!</h2><p lang="en">Next: {lesson.situations.find(s=>s.id===scene).context.en}</p><button className="primary" onClick={()=>setOpen(scene)}>SEGÜENT ESCENA →</button><button className="text-button" onClick={onExit}>Inici / Home</button></div>:index<exercises.length?<Exercise key={exercises[index].id} exercise={exercises[index]} previousExercise={index>first?exercises[index-1]:undefined} lesson={lesson} draft={progress.session.draft} onDraft={draft=>onChange(p=>saveDraft(p,draft))} onFinish={next}/>:<div className="chat-ending"><h2>Fins aviat!</h2><p lang="en">You communicated {attempts.filter(a=>a.outcome==='communicated').length} arrival goals with support. An independent conversation comes later.</p><button className="primary" onClick={()=>{setOpen(exercises[0].situation_id);onChange(p=>({...p,session:newSession()}));}}>TORNEM A PARLAR →</button><button className="text-button" onClick={onExit}>Inici / Home</button></div>}
  <div ref={end}/>
  </div></div>;
 }
