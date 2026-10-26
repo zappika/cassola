@@ -87,8 +87,15 @@ function HomeScreen({onStart,progress,lesson,progressPanel,notice}){
 }
 
 const {useState,useEffect,useRef}=React;
-// Keep the newest message in view by scrolling the thread itself; moving the page makes the screen jump.
-function toLatest(el){const thread=el?.closest('.conversation-thread');if(thread)thread.scrollTo({top:thread.scrollHeight,behavior:'smooth'});}
+// Lift the last two bubbles to the top of the thread (scrolling the thread, never the page, so nothing jumps).
+// The spacer at the end gives the thread enough room to scroll that far.
+function toLatest(el){
+ const thread=el?.closest('.conversation-thread'),spacer=thread?.querySelector('.thread-spacer');if(!thread||!spacer)return;
+ const messages=thread.querySelectorAll('.chat-message'),target=messages.length>1?messages[messages.length-2]:null;
+ const top=target?target.offsetTop-12:0;
+ spacer.style.height='0px';spacer.style.height=Math.max(0,thread.clientHeight-(thread.scrollHeight-top))+'px';
+ thread.scrollTo({top,behavior:'smooth'});
+}
 function Copy({value,english}){return value?<><div lang="ca">{value.ca}</div>{english&&value.en&&<div className="english" lang="en">{value.en}</div>}</>:null;}
 function WordMeaning({text,meaning,onHelp}){
  const [open,setOpen]=useState(false),[position,setPosition]=useState({}),root=useRef(null),id=React.useId();
@@ -192,7 +199,7 @@ function PracticeScreen({lesson,onExit,progress,onChange,storageNotice}){
  <div className="conversation-thread" aria-label="Restaurant conversation">
  {history.map(({exercise,step,submissions},i)=><ConversationTurn key={exercise.id} exercise={exercise} previous={exercises[i-1]} lesson={lesson} submissions={submissions}>{!submissions.length&&<p className="chat-instruction" lang="en">{step.outcome==='skipped'?'Previously left for later.':'Earlier reply was not saved.'}</p>}</ConversationTurn>)}
  {index<exercises.length?<Exercise key={exercises[index].id} exercise={exercises[index]} previousExercise={exercises[index-1]} lesson={lesson} draft={progress.session.draft} onDraft={draft=>onChange(p=>saveDraft(p,draft))} onFinish={next}/>:<div className="chat-ending"><h2>Fins aviat!</h2><p lang="en">You communicated {attempts.filter(a=>a.outcome==='communicated').length} arrival goals with support. An independent conversation comes later.</p><button className="primary" onClick={()=>onChange(p=>({...p,session:newSession()}))}>TORNEM A PARLAR →</button><button className="text-button" onClick={onExit}>Inici / Home</button></div>}
- <div ref={end}/>
+ <div ref={end} className="thread-spacer" aria-hidden="true"/>
  </div></div>;
 }
 function ProgressPanel({progress,lesson,onReset}){

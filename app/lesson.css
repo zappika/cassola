@@ -58,6 +58,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
 /* Conversation fills exactly one screen: header on top, thread scrolls, reply pinned at the bottom. */
 .lesson-shell.conversation-shell{height:100vh;height:100dvh;min-height:0;display:flex;flex-direction:column;overflow:hidden;padding-bottom:0}
 .conversation-shell>.conversation-header{position:static;flex:none}
-.conversation-thread{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;padding-bottom:12px;-webkit-overflow-scrolling:touch}
-.conversation-thread>:first-child{margin-top:auto}
+.conversation-thread{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;position:relative;display:flex;flex-direction:column;padding-bottom:12px;-webkit-overflow-scrolling:touch}
 .reply-area{position:sticky;bottom:0;z-index:5;background:#FFD23F;margin-bottom:0;padding:12px 0 calc(12px + env(safe-area-inset-bottom));box-shadow:0 -14px 14px -10px #FFD23F}
+.thread-spacer{flex:none}
