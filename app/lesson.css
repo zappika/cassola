@@ -55,3 +55,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
 @media(max-width:360px){.home-shell{padding:24px 18px}.home-greeting h1{font-size:32px}.home-greeting svg{width:95px}.home-invitation{padding:20px}}
 .audio-play{flex:none;display:grid;place-items:center;width:34px;height:34px;border:0;border-radius:99px;padding:0;background:#14121012;color:#141210;cursor:pointer}.audio-play.playing,.audio-play.loading{background:#141210;color:#FFD23F}.audio-control>span{display:block;font-size:11px;line-height:1.4;margin-top:7px}
 .waiter-line{display:flex;gap:10px;align-items:flex-start}.waiter-line>span{padding-top:4px}.conversation-turn>*{animation:bubble-in .3s ease-out}@keyframes bubble-in{from{opacity:0;transform:translateY(6px)}}@media (prefers-reduced-motion:reduce){.conversation-turn>*{animation:none}}
+/* Conversation fills exactly one screen: header on top, thread scrolls, reply pinned at the bottom. */
+.lesson-shell.conversation-shell{height:100vh;height:100dvh;min-height:0;display:flex;flex-direction:column;overflow:hidden;padding-bottom:0}
+.conversation-shell>.conversation-header{position:static;flex:none}
+.conversation-thread{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;padding-bottom:12px;-webkit-overflow-scrolling:touch}
+.conversation-thread>:first-child{margin-top:auto}
+.reply-area{position:sticky;bottom:0;z-index:5;background:#FFD23F;margin-bottom:0;padding:12px 0 calc(12px + env(safe-area-inset-bottom));box-shadow:0 -14px 14px -10px #FFD23F}

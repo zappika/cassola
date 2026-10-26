@@ -64,7 +64,7 @@ import {evaluate, evaluateChoice, shuffle, assemble, supportedExercises} from '/
 
 function HomeScreen({onStart,progress,lesson,progressPanel,notice}){
  const total=supportedExercises(lesson).length,finished=progress.session?.finished.length||0;
- const resuming=!!progress.session&&finished<total;
+ const resuming=false;
  const revisit=progressSummary(progress).revisit;
  return <main className="home-shell">
  <header className="home-brand"><strong>cassola</strong><span>Català a foc lent.</span></header>
@@ -87,6 +87,8 @@ function HomeScreen({onStart,progress,lesson,progressPanel,notice}){
 }
 
 const {useState,useEffect,useRef}=React;
+// Keep the newest message in view by scrolling the thread itself; moving the page makes the screen jump.
+function toLatest(el){const thread=el?.closest('.conversation-thread');if(thread)thread.scrollTo({top:thread.scrollHeight,behavior:'smooth'});}
 function Copy({value,english}){return value?<><div lang="ca">{value.ca}</div>{english&&value.en&&<div className="english" lang="en">{value.en}</div>}</>:null;}
 function WordMeaning({text,meaning,onHelp}){
  const [open,setOpen]=useState(false),[position,setPosition]=useState({}),root=useRef(null),id=React.useId();
@@ -122,7 +124,7 @@ function ConversationTurn({exercise,previous,lesson,submissions,children,onHelp,
  // New turns reveal one bubble at a time: scene, waiter, then your reply.
  const [stage,setStage]=useState(active&&!submissions.length?0:2);
  const root=useRef(null);
- useEffect(()=>{if(active&&stage>0)root.current?.lastElementChild?.scrollIntoView({block:'nearest'});},[stage]);
+ useEffect(()=>{if(active&&stage>0)toLatest(root.current);},[stage]);
  useEffect(()=>{if(stage>=2)return;const t=setTimeout(()=>setStage(stage+1),stage===0?(context.scene?700:0):(context.staff?1500:0));return()=>clearTimeout(t);},[stage]);
  return <section ref={root} className="conversation-turn" aria-label={active?'Current conversation turn':'Earlier conversation turn'}>
  {context.scene&&<div className="scene-message"><Glossed text={context.scene.ca}/></div>}
@@ -145,9 +147,9 @@ function Exercise({exercise:e,previousExercise,lesson,onFinish,onDraft,draft}){
  // Keep legacy flags in persisted drafts so existing sessions resume without migration.
  useEffect(()=>{onDraft({id:e.id,order:initial.order,picked,chunks,answer,english:initial.english,hint:initial.hint,model:initial.model,result,previous,assisted,submissions});},[picked,chunks,answer,result,previous,assisted,submissions]);
  const anchor=useRef(null);
- useEffect(()=>{anchor.current?.scrollIntoView({block:'nearest'});},[submissions.length]);
+ useEffect(()=>{toLatest(anchor.current);},[submissions.length]);
  // The reply area mounts after the waiter bubble is revealed, so focus it when it arrives.
- const attach=el=>{if(el&&!anchor.current){anchor.current=el;el.scrollIntoView({block:'nearest'});el.querySelector('input,textarea,button')?.focus({preventScroll:true});}};
+ const attach=el=>{if(el&&!anchor.current){anchor.current=el;toLatest(el);el.querySelector('input,textarea,button')?.focus({preventScroll:true});}};
  // Older saved drafts may already have a successful answer awaiting Continue.
 
  const typed=e.type==='type',built=e.type==='build',choice=!!e.options,success=result?.outcome==='communicated';
@@ -181,7 +183,7 @@ function Exercise({exercise:e,previousExercise,lesson,onFinish,onDraft,draft}){
 function PracticeScreen({lesson,onExit,progress,onChange,storageNotice}){
  const exercises=supportedExercises(lesson),attempts=progress.session.finished,index=attempts.length;
  const history=conversationHistory(lesson,progress),end=useRef(null);
- useEffect(()=>{end.current?.scrollIntoView({block:'nearest'});player.stop();return()=>player.stop();},[index]);
+ useEffect(()=>{toLatest(end.current);player.stop();return()=>player.stop();},[index]);
  useEffect(()=>{const pause=()=>{if(document.hidden)player.stop();};document.addEventListener('visibilitychange',pause);return()=>document.removeEventListener('visibilitychange',pause);},[]);
  function next(attempt,snapshot){onChange(p=>finishExercise(snapshot?saveDraft(p,snapshot):p,attempt,lesson));}
  return <div className="lesson-shell conversation-shell">
@@ -218,6 +220,6 @@ function App(){
  if(!lesson||!progress)return <div className="lesson-shell" role="status"><p>{error||'Carregant… / Loading…'}</p>{error&&<button className="primary" onClick={()=>setReload(reload+1)}>Try again</button>}</div>;
  const panel=<ProgressPanel progress={progress} lesson={lesson} onReset={reset}/>;
  if(screen==='practice')return <PracticeScreen lesson={lesson} progress={progress} onChange={change} storageNotice={storageError||notice} onExit={()=>setScreen('home')}/>;
- return <HomeScreen progress={progress} lesson={lesson} progressPanel={panel} notice={storageError||notice} onStart={()=>{if(!progressRef.current.session||progressRef.current.session.finished.length===supportedExercises(lesson).length)change(p=>({...p,session:newSession(),lastActivity:Date.now()}));setScreen('practice');}}/>;
+ return <HomeScreen progress={progress} lesson={lesson} progressPanel={panel} notice={storageError||notice} onStart={()=>{change(p=>({...p,session:newSession(),lastActivity:Date.now()}));setScreen('practice');}}/>;
 }
 ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
