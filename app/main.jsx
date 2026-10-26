@@ -88,9 +88,10 @@ function HomeScreen({onStart,progress,lesson,progressPanel,notice}){
 
 const {useState,useEffect,useRef}=React;
 // Lift the last two bubbles to the top of the thread (scrolling the thread, never the page, so nothing jumps).
-// The spacer at the end gives the thread enough room to scroll that far.
+// The spacer sits just above the reply area, so it fills the gap and keeps the reply at the bottom.
 function toLatest(el){
- const thread=el?.closest('.conversation-thread'),spacer=thread?.querySelector('.thread-spacer');if(!thread||!spacer)return;
+ const thread=el?.closest('.conversation-thread'),spacer=thread?.querySelector('.thread-spacer');if(!thread)return;
+ if(!spacer)return thread.scrollTo({top:thread.scrollHeight,behavior:'smooth'});
  const messages=thread.querySelectorAll('.chat-message'),target=messages.length>1?messages[messages.length-2]:null;
  const top=target?target.offsetTop-12:0;
  spacer.style.height='0px';spacer.style.height=Math.max(0,thread.clientHeight-(thread.scrollHeight-top))+'px';
@@ -173,6 +174,7 @@ function Exercise({exercise:e,previousExercise,lesson,onFinish,onDraft,draft}){
  }
  const modelText=rule.accepted_responses[0].replace(/\{(\w+)\}/g,(_,k)=>situation.facts[k]??'');
  return <ConversationTurn exercise={e} previous={previousExercise} lesson={lesson} submissions={submissions} onHelp={help} active>
+  <div className="thread-spacer" aria-hidden="true"/>
   <div ref={attach} className="reply-area exercise">
   {!success&&<form onSubmit={check} aria-label="Compose a reply">
   <div className="composer-label">{built?'Construeix la resposta':typed?'Escriu la resposta':'Tria la resposta'}</div>
@@ -199,7 +201,7 @@ function PracticeScreen({lesson,onExit,progress,onChange,storageNotice}){
  <div className="conversation-thread" aria-label="Restaurant conversation">
  {history.map(({exercise,step,submissions},i)=><ConversationTurn key={exercise.id} exercise={exercise} previous={exercises[i-1]} lesson={lesson} submissions={submissions}>{!submissions.length&&<p className="chat-instruction" lang="en">{step.outcome==='skipped'?'Previously left for later.':'Earlier reply was not saved.'}</p>}</ConversationTurn>)}
  {index<exercises.length?<Exercise key={exercises[index].id} exercise={exercises[index]} previousExercise={exercises[index-1]} lesson={lesson} draft={progress.session.draft} onDraft={draft=>onChange(p=>saveDraft(p,draft))} onFinish={next}/>:<div className="chat-ending"><h2>Fins aviat!</h2><p lang="en">You communicated {attempts.filter(a=>a.outcome==='communicated').length} arrival goals with support. An independent conversation comes later.</p><button className="primary" onClick={()=>onChange(p=>({...p,session:newSession()}))}>TORNEM A PARLAR →</button><button className="text-button" onClick={onExit}>Inici / Home</button></div>}
- <div ref={end} className="thread-spacer" aria-hidden="true"/>
+ <div ref={end}/>
  </div></div>;
 }
 function ProgressPanel({progress,lesson,onReset}){

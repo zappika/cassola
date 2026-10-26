@@ -9,11 +9,12 @@ export function createPlayer(makeContext=()=>new (globalThis.AudioContext||globa
  let context=null,source=null,serial=0,timer=null,state={key:null,status:'idle'},listeners=new Set();
  const buffers=new Map();
  const emit=next=>{state=next;listeners.forEach(fn=>fn(state));};
- const ctx=()=>context||(context=makeContext());
+ // 'playback' lets Safari play Web Audio even when the phone's silent switch is on.
+ const ctx=()=>{if(!context){try{if(globalThis.navigator?.audioSession)navigator.audioSession.type='playback';}catch{}context=makeContext();}return context;};
  function release(){clearTimeout(timer);if(source){source.onended=null;try{source.stop();}catch{}source.disconnect();source=null;}}
  function stop(){serial++;release();emit({key:null,status:'idle'});}
  // Browsers only allow sound after a user gesture; resuming here lets later automatic playback through.
- function unlock(){try{const c=ctx();if(c.state==='suspended')c.resume();}catch{}}
+ function unlock(){try{if(globalThis.navigator?.audioSession)navigator.audioSession.type='playback';const c=ctx();if(c.state==='suspended')c.resume();}catch{}}
  function play(key,src){
   stop();const run=++serial;
   const update=status=>{if(run===serial)emit({key,status});};
