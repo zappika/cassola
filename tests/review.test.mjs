@@ -14,8 +14,12 @@ test('every learner recording has a generation-specific listening review',()=>{
   assert.equal(sectionStatus([],section),'pending');
  }
 });
+test('listening review identifies the voice of each speaker',()=>{
+ assert.match(catalog.find(s=>s.id==='voice-trial-staff-size').rows[0].note,/^Dani ·/);
+ assert.match(catalog.find(s=>s.id==='voice-trial-reply-name-1').rows[0].note,/^Martina ·/);
+});
 test('catalog includes all guided exercises, all branches and every rule fixture',()=>{
- assert.equal(catalog.length,89);assert.equal(new Set(catalog.map(s=>s.id)).size,89);
+ assert.equal(catalog.length,91);assert.equal(new Set(catalog.map(s=>s.id)).size,91);
  for(const s of catalog){assert.ok(s.rows.length);assert.match(s.revision,/^[0-9a-f]{20}$/);assert.ok(!JSON.stringify(s.rows).includes('{party_size_word}'));}
  assert.ok(catalog.find(s=>s.id==='answers-confirm-booking').rows.some(r=>r.ca==='Tinc una taula reservada.'&&r.note==='Accept'));
 });

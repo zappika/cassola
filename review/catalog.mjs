@@ -55,7 +55,7 @@ export function buildSections(lesson, fixtures) {
   add('audio-scripts','Other wording','Audio scripts — text only',Object.entries(lesson.audio).map(([id,a])=>row(id,a.text,'Audio has not been generated. Approval here covers wording only.')));
   for(const [id,clip] of Object.entries(audioTrial.clips)){
     if(audioTrial.lesson_version!==lesson.content_version||(clip.role!=='learner'&&lesson.audio[id]?.text!==clip.text))continue;
-    add('voice-trial-'+id,'Voice trial',clip.text,[{label:'Listen and review',ca:clip.text,audio:clip.path,note:'Martina · Eleven v4. Check Catalan pronunciation, accent, pace, stress and exact wording. This approval covers this specific trial clip.',generation_id:clip.generation_id}]);
+    add('voice-trial-'+id,'Voice trial',clip.text,[{label:'Listen and review',ca:clip.text,audio:clip.path,note:`${clip.voice_name||audioTrial.voice_name} · Eleven v4. Check Catalan pronunciation, accent, pace, stress and exact wording. This approval covers this specific trial clip.`,generation_id:clip.generation_id}]);
   }
   return sections;
 }

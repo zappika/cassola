@@ -1,29 +1,32 @@
-# Task: generate the two missing waiter clips
+# Task: complete waiter audio with a distinct voice
 
-Status: **not started**. Needs explicit user approval for this paid batch (2 clips).
+Status: **complete locally** (2026-10-27). User approved five Dani recordings: replace the three Martina waiter clips and add the two missing current-lesson lines. Not pushed or deployed. Native listening review remains pending.
 
-## Why
-The 63-clip batch (see `ELEVENLABS_REPLY_AUDIO.md`) covered **learner answers only**. Waiter lines were a separate 3-clip trial on 2026-10-17. Two waiter lines in `content/walking-in.v2.json` still have no audio, so the conversation goes silent from "Quantes persones sou?" onwards.
+## Voice split
+- Waiter: **Dani — Warm Catalan Narrator**, `fTfoPZ1IWyahVIb25WKi` (male, Central Catalan).
+- Customer: **Martina**, `OCsEi4G5LJzKMSZFmYBD` (female, Barcelona Catalan). Existing 63 recordings retained.
+- Model `eleven_v4`, explicit language `ca`; one take per clip, no retries. Mono MP3, 44.1kHz, approximately 128kbps, verified with `afinfo`.
 
-| audio_id | text (exact) | English | Used in |
-|---|---|---|---|
-| `staff-size` | Quantes persones sou? | How many people are you? | `type-table`, `choose-repeat` (also replayed after a correct "repeat" request) |
-| `staff-repeat` | És clar. | Of course. | `choose-repeat`, said after a correct answer |
+## Generated clips
+| audio_id | Exact text | Generation ID |
+|---|---|---|
+| staff-booking | Bona nit, teniu reserva? | FobnvQxm0JBTlxc6mY7w |
+| staff-name | A quin nom? | Ra1qwEaWpS5WNcmvsYPC |
+| staff-late | Arribeu una mica tard. | j5TCAhgn0NFjLAHC4lmg |
+| staff-size | Quantes persones sou? | ze3Xe0fBaFjld1Fv3Edf |
+| staff-repeat | És clar. | R1HaQf9Rtllwgsl2x30R |
 
-Every other waiter line already has a clip: `staff-booking`, `staff-name`, `staff-late`.
+Flow: `SCTQsueafJsTdEuQq1K9`. Actual batch cost: **85.9914 credits / 1.56348 US cents**.
 
-## Generation settings (match the existing clips exactly)
-- Model `eleven_v4`, voice **Martina** `OCsEi4G5LJzKMSZFmYBD`, language `ca`
-- One take per clip, no retries. Mono MP3, 44.1kHz, 128kbps
-- Text must match the table character for character, including the accent in "És" and the question mark. `clipFor` only accepts a waiter clip whose `text` equals the lesson line exactly.
+## Integration
+- New paths: `audio/trial/<audio_id>-dani.mp3`, preventing stale cached Martina playback.
+- Active entries in `content/audio-trial.mjs` record the voice per clip. Waiter entries have no learner role.
+- Original three Martina files remain intact and their metadata is retained under `superseded_clips`.
+- Review labels use each clip's voice; changed generation IDs invalidate prior clip-specific reviews. There are 91 review sections.
+- All active clips remain `awaiting_native_listening_review`.
 
-## Where the files go
-1. `audio/trial/staff-size.mp3` and `audio/trial/staff-repeat.mp3`
-2. Add both to `clips` in `content/audio-trial.mjs`, keyed by the audio_id, with the same fields as `staff-booking`: `text`, `path`, `duration_seconds`, `generation_id`, `credits`, `price_cents`, plus `generated_at`, `flow_id` and `"review_status": "awaiting_native_listening_review"`. **No `role` field.** `role: "learner"` is only for answers.
-3. No code changes needed. `app/main.jsx` already renders a speaker button for both lines, and "Quantes persones sou?" autoplays like the other waiter lines.
-
-## Verify
-- `node --test tests/*.test.mjs` passes. The manifest test checks that every clip file exists and is an MP3.
-- In the preview (port 4321), play through to "Quantes persones sou?": it should autoplay. Answer the repeat question correctly: "És clar." should get a speaker button.
-- Add generation IDs and cost to HANDOFF.md. Both clips stay `awaiting_native_listening_review`.
-- Do not deploy.
+## Validation and next step
+- 92 tests pass, including waiter coverage, learner voice preservation and review voice labels.
+- Listen with a native Catalan reviewer before treating pronunciation, accent and pace as approved.
+- Four waiter lines for future independent exchanges remain outside this approved batch: `staff-seat`, `staff-late-seat`, `staff-confirm-name`, `staff-confirm-party_size`.
+- Do not deploy or generate more paid takes without authorization.

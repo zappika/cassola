@@ -28,7 +28,14 @@ function setup({timeout=500,load=src=>Promise.resolve(src)}={}){const context=fa
 const tick=()=>new Promise(r=>setTimeout(r,0));
 test('exact text/version maps to actual MP3, changed text/version and unavailable clips do not',()=>{
  for(const [id,clip] of Object.entries(manifest.clips)){assert.ok(clipFor(lesson,{audio_id:id,ca:clip.text}));assert.ok(existsSync(new URL('..'+clip.path,import.meta.url)));assert.equal(readFileSync(new URL('..'+clip.path,import.meta.url)).subarray(0,3).toString(),'ID3');assert.equal(clipFor(lesson,{audio_id:id,ca:clip.text+'!'}),null);assert.equal(clipFor({...lesson,content_version:'new'},{audio_id:id,ca:clip.text}),null);}
- assert.equal(clipFor(lesson,{audio_id:'staff-size',ca:'Quantes persones sou?'}),null);
+ assert.equal(clipFor(lesson,{audio_id:'staff-seat',ca:'Perfecte, passeu, si us plau.'}),null);
+});
+test('all current waiter lines use Dani and learner recordings retain Martina',()=>{
+ for(const id of ['staff-booking','staff-name','staff-late','staff-size','staff-repeat']){
+  const clip=clipFor(lesson,{audio_id:id,ca:lesson.audio[id].text});
+  assert.ok(clip,id);assert.equal(clip.voice_id,'fTfoPZ1IWyahVIb25WKi');assert.equal(clip.voice_name,'Dani');assert.notEqual(clip.role,'learner');
+ }
+ for(const clip of Object.values(manifest.clips).filter(c=>c.role==='learner'))assert.equal(clip.voice_id,'OCsEi4G5LJzKMSZFmYBD');
 });
 test('one clip at a time, replay and end state',async()=>{
  const {player,sources}=setup();player.play('a','a.mp3');assert.equal(player.getState().status,'loading');await tick();assert.equal(player.getState().status,'playing');

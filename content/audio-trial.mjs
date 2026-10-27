@@ -1,4 +1,5 @@
 // Trial assets only. Native listening approval is still pending.
+// Top-level voice fields are legacy defaults; each active clip records its own voice.
 export default {
   "schema_version": 1,
   "lesson_version": "2.0.0-draft.1",
@@ -12,27 +13,42 @@ export default {
   "clips": {
     "staff-booking": {
       "text": "Bona nit, teniu reserva?",
-      "path": "/audio/trial/staff-booking.mp3",
-      "duration_seconds": 1.68,
-      "generation_id": "B8nKNVbmRzt0S3Q66ZA0",
+      "path": "/audio/trial/staff-booking-dani.mp3",
+      "duration_seconds": 2,
+      "generation_id": "FobnvQxm0JBTlxc6mY7w",
       "credits": 23.9976,
-      "price_cents": 0.43632
+      "price_cents": 0.43632,
+      "generated_at": "2026-10-27",
+      "flow_id": "SCTQsueafJsTdEuQq1K9",
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "fTfoPZ1IWyahVIb25WKi",
+      "voice_name": "Dani"
     },
     "staff-name": {
       "text": "A quin nom?",
-      "path": "/audio/trial/staff-name.mp3",
-      "duration_seconds": 0.88,
-      "generation_id": "PTOhFKEaeQkZvihIdA4C",
+      "path": "/audio/trial/staff-name-dani.mp3",
+      "duration_seconds": 1.04,
+      "generation_id": "Ra1qwEaWpS5WNcmvsYPC",
       "credits": 10.998899999999999,
-      "price_cents": 0.19998
+      "price_cents": 0.19998,
+      "generated_at": "2026-10-27",
+      "flow_id": "SCTQsueafJsTdEuQq1K9",
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "fTfoPZ1IWyahVIb25WKi",
+      "voice_name": "Dani"
     },
     "staff-late": {
       "text": "Arribeu una mica tard.",
-      "path": "/audio/trial/staff-late.mp3",
-      "duration_seconds": 1.36,
-      "generation_id": "TnpDWPbIJXSsCQFuQe32",
+      "path": "/audio/trial/staff-late-dani.mp3",
+      "duration_seconds": 1.68,
+      "generation_id": "j5TCAhgn0NFjLAHC4lmg",
       "credits": 21.997799999999998,
-      "price_cents": 0.39996
+      "price_cents": 0.39996,
+      "generated_at": "2026-10-27",
+      "flow_id": "SCTQsueafJsTdEuQq1K9",
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "fTfoPZ1IWyahVIb25WKi",
+      "voice_name": "Dani"
     },
     "reply-listen-booking": {
       "text": "Si tenim reserva.",
@@ -44,7 +60,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-booking-1": {
       "text": "Tinc una taula reservada.",
@@ -56,7 +74,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-booking-2": {
       "text": "Voldria confirmar la meva reserva, si us plau.",
@@ -68,7 +88,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-booking-3": {
       "text": "Sí, tinc reserva.",
@@ -80,7 +102,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-name-1": {
       "text": "A nom de Martí.",
@@ -92,7 +116,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-name-2": {
       "text": "La reserva és a nom de Martí.",
@@ -104,7 +130,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-name-3": {
       "text": "Martí.",
@@ -116,7 +144,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-walk-in-1": {
       "text": "No tenim reserva. Hi hauria alguna taula disponible, si us plau?",
@@ -128,7 +158,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-walk-in-2": {
       "text": "No, però teniu lloc per a dos?",
@@ -140,7 +172,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-repeat-1": {
       "text": "Ho podeu repetir, si us plau?",
@@ -152,7 +186,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-repeat-2": {
       "text": "Una altra vegada, si us plau.",
@@ -164,7 +200,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-late-1": {
       "text": "Sí, perdó! Encara tenim taula?",
@@ -176,7 +214,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-late-2": {
       "text": "Arribem tard. Encara ens podeu donar la taula?",
@@ -188,7 +228,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-late-3": {
       "text": "Ho sento, hem arribat tard. Encara tenim la taula reservada?",
@@ -200,7 +242,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-name-1": {
       "text": "A nom de Martí si us plau",
@@ -212,7 +256,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-1": {
       "text": "Arribem tard. Encara tenim taula?",
@@ -224,7 +270,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-2": {
       "text": "Encara tenim taula? Sí, perdó!",
@@ -236,7 +284,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-3": {
       "text": "Sí, perdó! Encara tenim taula? Si us plau.",
@@ -248,7 +298,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-name-2": {
       "text": "La reserva és a nom de Martí si us plau",
@@ -260,7 +312,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-name-4": {
       "text": "si us plau La reserva és a nom de Martí",
@@ -272,7 +326,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-4": {
       "text": "Sí, perdó! Arribem tard. Encara tenim taula?",
@@ -284,7 +340,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-5": {
       "text": "Sí, perdó! Arribem tard. Encara tenim taula? Si us plau.",
@@ -296,7 +354,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-7": {
       "text": "Sí, perdó! Encara tenim taula? Arribem tard.",
@@ -308,7 +368,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-8": {
       "text": "Sí, perdó! Encara tenim taula? Arribem tard. Si us plau.",
@@ -320,7 +382,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-9": {
       "text": "Sí, perdó! Encara tenim taula? Si us plau. Arribem tard.",
@@ -332,7 +396,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-10": {
       "text": "Sí, perdó! Si us plau. Arribem tard. Encara tenim taula?",
@@ -344,7 +410,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-11": {
       "text": "Sí, perdó! Si us plau. Encara tenim taula?",
@@ -356,7 +424,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-13": {
       "text": "Arribem tard. Sí, perdó! Encara tenim taula?",
@@ -368,7 +438,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-14": {
       "text": "Arribem tard. Sí, perdó! Encara tenim taula? Si us plau.",
@@ -380,7 +452,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-15": {
       "text": "Arribem tard. Sí, perdó! Si us plau. Encara tenim taula?",
@@ -392,7 +466,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-16": {
       "text": "Arribem tard. Encara tenim taula? Sí, perdó!",
@@ -404,7 +480,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-17": {
       "text": "Arribem tard. Encara tenim taula? Sí, perdó! Si us plau.",
@@ -416,7 +494,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-18": {
       "text": "Arribem tard. Encara tenim taula? Si us plau.",
@@ -428,7 +508,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-19": {
       "text": "Arribem tard. Encara tenim taula? Si us plau. Sí, perdó!",
@@ -440,7 +522,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-20": {
       "text": "Arribem tard. Si us plau. Sí, perdó! Encara tenim taula?",
@@ -452,7 +536,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-21": {
       "text": "Arribem tard. Si us plau. Encara tenim taula?",
@@ -464,7 +550,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-22": {
       "text": "Arribem tard. Si us plau. Encara tenim taula? Sí, perdó!",
@@ -476,7 +564,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-23": {
       "text": "Encara tenim taula? Sí, perdó! Arribem tard.",
@@ -488,7 +578,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-24": {
       "text": "Encara tenim taula? Sí, perdó! Arribem tard. Si us plau.",
@@ -500,7 +592,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-25": {
       "text": "Encara tenim taula? Sí, perdó! Si us plau.",
@@ -512,7 +606,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-26": {
       "text": "Encara tenim taula? Sí, perdó! Si us plau. Arribem tard.",
@@ -524,7 +620,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-27": {
       "text": "Encara tenim taula? Arribem tard.",
@@ -536,7 +634,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-28": {
       "text": "Encara tenim taula? Arribem tard. Sí, perdó!",
@@ -548,7 +648,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-29": {
       "text": "Encara tenim taula? Arribem tard. Sí, perdó! Si us plau.",
@@ -560,7 +662,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-30": {
       "text": "Encara tenim taula? Arribem tard. Si us plau.",
@@ -572,7 +676,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-31": {
       "text": "Encara tenim taula? Arribem tard. Si us plau. Sí, perdó!",
@@ -584,7 +690,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-32": {
       "text": "Encara tenim taula? Si us plau. Sí, perdó!",
@@ -596,7 +704,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-33": {
       "text": "Encara tenim taula? Si us plau. Sí, perdó! Arribem tard.",
@@ -608,7 +718,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-34": {
       "text": "Encara tenim taula? Si us plau. Arribem tard.",
@@ -620,7 +732,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-35": {
       "text": "Encara tenim taula? Si us plau. Arribem tard. Sí, perdó!",
@@ -632,7 +746,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-36": {
       "text": "Si us plau. Sí, perdó! Arribem tard. Encara tenim taula?",
@@ -644,7 +760,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-37": {
       "text": "Si us plau. Sí, perdó! Encara tenim taula?",
@@ -656,7 +774,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-38": {
       "text": "Si us plau. Sí, perdó! Encara tenim taula? Arribem tard.",
@@ -668,7 +788,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-39": {
       "text": "Si us plau. Arribem tard. Sí, perdó! Encara tenim taula?",
@@ -680,7 +802,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-40": {
       "text": "Si us plau. Arribem tard. Encara tenim taula?",
@@ -692,7 +816,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-41": {
       "text": "Si us plau. Arribem tard. Encara tenim taula? Sí, perdó!",
@@ -704,7 +830,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-42": {
       "text": "Si us plau. Encara tenim taula? Sí, perdó!",
@@ -716,7 +844,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-43": {
       "text": "Si us plau. Encara tenim taula? Sí, perdó! Arribem tard.",
@@ -728,7 +858,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-44": {
       "text": "Si us plau. Encara tenim taula? Arribem tard.",
@@ -740,7 +872,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-45": {
       "text": "Si us plau. Encara tenim taula? Arribem tard. Sí, perdó!",
@@ -752,7 +886,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-name-3": {
       "text": "si us plau A nom de Martí",
@@ -764,7 +900,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-6": {
       "text": "Sí, perdó! Arribem tard. Si us plau. Encara tenim taula?",
@@ -776,7 +914,9 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     },
     "reply-build-late-12": {
       "text": "Sí, perdó! Si us plau. Encara tenim taula? Arribem tard.",
@@ -788,7 +928,67 @@ export default {
       "role": "learner",
       "generated_at": "2026-10-27",
       "flow_id": "wB7nP6Tq7eQCz0PZBpmk",
-      "review_status": "awaiting_native_listening_review"
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
+    },
+    "staff-size": {
+      "text": "Quantes persones sou?",
+      "path": "/audio/trial/staff-size-dani.mp3",
+      "duration_seconds": 1.52,
+      "generation_id": "ze3Xe0fBaFjld1Fv3Edf",
+      "credits": 20.9979,
+      "price_cents": 0.38178,
+      "generated_at": "2026-10-27",
+      "flow_id": "SCTQsueafJsTdEuQq1K9",
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "fTfoPZ1IWyahVIb25WKi",
+      "voice_name": "Dani"
+    },
+    "staff-repeat": {
+      "text": "És clar.",
+      "path": "/audio/trial/staff-repeat-dani.mp3",
+      "duration_seconds": 0.8,
+      "generation_id": "R1HaQf9Rtllwgsl2x30R",
+      "credits": 7.999200000000001,
+      "price_cents": 0.14544,
+      "generated_at": "2026-10-27",
+      "flow_id": "SCTQsueafJsTdEuQq1K9",
+      "review_status": "awaiting_native_listening_review",
+      "voice_id": "fTfoPZ1IWyahVIb25WKi",
+      "voice_name": "Dani"
+    }
+  },
+  "superseded_clips": {
+    "staff-booking-martina": {
+      "text": "Bona nit, teniu reserva?",
+      "path": "/audio/trial/staff-booking.mp3",
+      "duration_seconds": 1.68,
+      "generation_id": "B8nKNVbmRzt0S3Q66ZA0",
+      "credits": 23.9976,
+      "price_cents": 0.43632,
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
+    },
+    "staff-name-martina": {
+      "text": "A quin nom?",
+      "path": "/audio/trial/staff-name.mp3",
+      "duration_seconds": 0.88,
+      "generation_id": "PTOhFKEaeQkZvihIdA4C",
+      "credits": 10.998899999999999,
+      "price_cents": 0.19998,
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
+    },
+    "staff-late-martina": {
+      "text": "Arribeu una mica tard.",
+      "path": "/audio/trial/staff-late.mp3",
+      "duration_seconds": 1.36,
+      "generation_id": "TnpDWPbIJXSsCQFuQe32",
+      "credits": 21.997799999999998,
+      "price_cents": 0.39996,
+      "voice_id": "OCsEi4G5LJzKMSZFmYBD",
+      "voice_name": "Martina"
     }
   }
 };

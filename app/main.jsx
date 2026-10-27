@@ -82,7 +82,7 @@ function HomeScreen({onStart,progress,lesson,progressPanel,notice}){
  <div className="future-scenes"><span className="future-scene booking">☎<span>Una reserva</span></span><span className="future-scene menu">☰<span>La carta</span></span><span className="future-scene bill">€<span>El compte</span></span></div>
  </section>
  <footer className="home-footer"><details><summary>Your practice</summary>{progressPanel}</details>
- <details><summary>A little about Cassola</summary><p>Small restaurant conversations, with Caçó by your side. Three waiter lines now have trial audio; the rest is text for now. Speaking comes later.</p><p>Our Catalan and trial voices are awaiting native-speaker review.</p></details></footer>
+ <details><summary>A little about Cassola</summary><p>Small restaurant conversations, with Caçó by your side. Waiter lines and supported choice and build replies have trial audio, with different voices for each speaker.</p><p>Our Catalan and trial voices are awaiting native-speaker review.</p></details></footer>
  </main>;
 }
 
@@ -125,15 +125,21 @@ function SentMessages({exercise,submissions,lesson,retrying=false,autoPlay=false
  </>;
 }
 const SPEAKER=<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>;
-function AudioButton({lesson,staff,autoPlay=false}){
- const clip=clipFor(lesson,staff),id=React.useId(),manual=useRef(false);
+// `then` lines play straight after this one, as one turn (the waiter's "És clar." + the repeated question).
+// autoPlay="after" waits for whatever is playing (your answer) to finish first.
+function AudioButton({lesson,staff,then=[],autoPlay=false}){
+ const clips=[staff,...then].map(line=>clipFor(lesson,line)).filter(Boolean),clip=clips[0],id=React.useId(),manual=useRef(false),step=useRef(0);
  const [state,setState]=useState(player.getState);
- useEffect(()=>player.subscribe(setState),[]);
+ useEffect(()=>player.subscribe(next=>{
+  if(next.key===id&&next.status==='ended'&&step.current<clips.length-1){step.current++;player.play(id,clips[step.current].path);return;}
+  setState(next);
+ }),[]);
+ const start=()=>{step.current=0;player.play(id,clip.path);};
  // Read the line out once when it appears; browsers may block this, so failures stay silent.
- useEffect(()=>{if(autoPlay&&clip)player.play(id,clip.path);},[]);
+ useEffect(()=>{if(!clip||!autoPlay)return;if(autoPlay==='after')return afterPlayback(start);start();},[]);
  if(!clip)return null;
  const status=state.key===id?state.status:'idle',busy=['loading','playing'].includes(status);
- return <button type="button" className={'audio-play '+status} title="Voice trial — native listening review pending" aria-label={`${busy?'Stop':'Play'}: ${staff.ca}`} onClick={()=>{manual.current=true;busy?player.stop():player.play(id,clip.path);}}>{SPEAKER}{status==='error'&&manual.current&&<span className="sr-only" role="status">Audio unavailable.</span>}</button>;
+ return <button type="button" className={'audio-play '+status} title="Voice trial — native listening review pending" aria-label={`${busy?'Stop':'Play'}: ${[staff,...then].map(l=>l.ca).join(' ')}`} onClick={()=>{manual.current=true;busy?player.stop():start();}}>{SPEAKER}{status==='error'&&manual.current&&<span className="sr-only" role="status">Audio unavailable.</span>}</button>;
 }
 const Recognition=typeof window!=='undefined'&&(window.SpeechRecognition||window.webkitSpeechRecognition);
 const setSession=type=>{try{if(navigator.audioSession)navigator.audioSession.type=type;}catch{}};
@@ -181,7 +187,7 @@ function ConversationTurn({exercise,previous,lesson,submissions,children,onHelp,
  {stage>=2&&<>
  <div className="chat-instruction"><Glossed text={context.instruction.ca}/></div>
  <SentMessages exercise={exercise} submissions={submissions} lesson={lesson} retrying={retrying} autoPlay={readReply}/>
- {submissions.at(-1)?.outcome==='communicated'&&exercise.on_success&&<div className="chat-message waiter"><div className="waiter-line"><AudioButton lesson={lesson} staff={exercise.on_success.acknowledgement}/><div><Copy value={exercise.on_success.acknowledgement}/><Copy value={exercise.staff}/></div></div></div>}
+ {submissions.at(-1)?.outcome==='communicated'&&exercise.on_success&&<div className="chat-message waiter"><div className="waiter-line"><AudioButton lesson={lesson} staff={exercise.on_success.acknowledgement} then={exercise.on_success.action==='replay_staff'?[exercise.staff]:[]} autoPlay={readReply&&'after'}/><div><Copy value={exercise.on_success.acknowledgement}/><Copy value={exercise.staff}/></div></div></div>}
  {children}
  </>}
  </section>;
