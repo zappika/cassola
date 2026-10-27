@@ -114,12 +114,12 @@ function Glossed({text,onHelp}){return <span lang="ca">{glossText(text).map((par
 // Only the reply that stands is shown: a failed attempt stays until the learner edits it, then the retry replaces it.
 // Accepted choice and build replies have pre-generated clips; typed and spoken replies are open-ended, so stay text-only.
 const LEARNER_AUDIO=['listen_choice','choice','build'];
-function SentMessages({exercise,submissions,lesson,retrying=false}){
+function SentMessages({exercise,submissions,lesson,retrying=false,autoPlay=false}){
  const submission=submissions.at(-1);
  if(!submission||(submission.outcome!=='communicated'&&!retrying))return null;
  const failed=submission.outcome!=='communicated',reply=sentReply(exercise,submission),missing=submission.missing||exercise.options?.find(o=>o.id===submission.input)?.missing_details||[];
  return <>
- <div className={'chat-message learner'+(failed?' failed':'')} aria-label={exercise.id==='listen-booking'?'Your interpretation':'Your reply'}>{!failed&&LEARNER_AUDIO.includes(exercise.type)?<div className="waiter-line"><AudioButton lesson={lesson} staff={{ca:reply.ca}}/><Copy value={reply}/></div>:<Copy value={reply}/>}</div>
+ <div className={'chat-message learner'+(failed?' failed':'')} aria-label={exercise.id==='listen-booking'?'Your interpretation':'Your reply'}>{!failed&&LEARNER_AUDIO.includes(exercise.type)?<div className="waiter-line"><AudioButton lesson={lesson} staff={{ca:reply.ca}} autoPlay={autoPlay}/><Copy value={reply}/></div>:<Copy value={reply}/>}</div>
  {failed&&<div className="delivery">Torna-ho a provar · Try again</div>}
  {failed&&<div className="chat-coaching" lang="en">{submission.outcome==='needs_information'&&missing.length?missing.map(k=><p key={k}>{lesson.feedback.missing_details[k]?.en}</p>):submission.outcome==='uncertain'?'Your answer may be valid. The checker couldn’t recognise it.':(lesson.feedback[submission.outcome]?.en||'Add the missing detail and send again.')}</div>}
  </>;
@@ -161,20 +161,27 @@ function SpeechInput({value,onChange,disabled}){
   <button type="button" className="text-button undo" onClick={()=>{rec.current?.abort();setTyping(true);}}>⌨ Escriu-ho / Type instead</button>
  </div>;
 }
-function ConversationTurn({exercise,previous,lesson,submissions,children,onHelp,active=false,retrying=false}){
+// The waiter waits for your answer to finish being read out, then a short beat, before speaking.
+function afterPlayback(fn){
+ let t=null;const busy=()=>['loading','playing'].includes(player.getState().status);
+ if(!busy()){fn();return()=>{};}
+ const off=player.subscribe(()=>{if(!busy()){off();t=setTimeout(fn,350);}});
+ return()=>{off();clearTimeout(t);};
+}
+function ConversationTurn({exercise,previous,lesson,submissions,children,onHelp,active=false,retrying=false,readReply=false}){
  const context=turnContext(lesson,exercise,previous);
  // New turns reveal one bubble at a time: scene, waiter, then your reply.
  const [stage,setStage]=useState(active&&!submissions.length?0:2);
  const root=useRef(null);
  useEffect(()=>{if(active&&stage>0)toLatest(root.current);},[stage]);
- useEffect(()=>{if(stage>=2)return;const t=setTimeout(()=>setStage(stage+1),stage===0?(context.scene?700:0):(context.staff?1500:0));return()=>clearTimeout(t);},[stage]);
+ useEffect(()=>{if(stage>=2)return;let undo=()=>{};const t=setTimeout(()=>{undo=stage===0?afterPlayback(()=>setStage(1)):(setStage(stage+1),()=>{});},stage===0?(context.scene?700:0):(context.staff?1500:0));return()=>{clearTimeout(t);undo();};},[stage]);
  return <section ref={root} className="conversation-turn" aria-label={active?'Current conversation turn':'Earlier conversation turn'}>
  {context.scene&&(previous?<div className="scene-break"><div className="kicker">NOVA ESCENA · NEW SCENE</div><Glossed text={context.scene.ca}/></div>:<div className="scene-message"><Glossed text={context.scene.ca}/></div>)}
  {context.staff&&stage>=1&&<div className="chat-message waiter"><div className="waiter-line"><AudioButton lesson={lesson} staff={exercise.staff} autoPlay={active&&stage===1}/><Glossed text={exercise.staff.ca} onHelp={onHelp}/></div></div>}
  {stage>=2&&<>
  <div className="chat-instruction"><Glossed text={context.instruction.ca}/></div>
- <SentMessages exercise={exercise} submissions={submissions} lesson={lesson} retrying={retrying}/>
- {submissions.at(-1)?.outcome==='communicated'&&exercise.on_success&&<div className="chat-message waiter"><Copy value={exercise.on_success.acknowledgement}/><Copy value={exercise.staff}/></div>}
+ <SentMessages exercise={exercise} submissions={submissions} lesson={lesson} retrying={retrying} autoPlay={readReply}/>
+ {submissions.at(-1)?.outcome==='communicated'&&exercise.on_success&&<div className="chat-message waiter"><div className="waiter-line"><AudioButton lesson={lesson} staff={exercise.on_success.acknowledgement}/><div><Copy value={exercise.on_success.acknowledgement}/><Copy value={exercise.staff}/></div></div></div>}
  {children}
  </>}
  </section>;
@@ -231,14 +238,17 @@ function PracticeScreen({lesson,onExit,progress,onChange,storageNotice}){
  const [open,setOpen]=useState(scene),between=index<exercises.length&&index>0&&scene!==open;
  const last=between?index-1:Math.min(index,exercises.length-1);
  let first=last;while(first>0&&exercises[first-1].situation_id===exercises[last].situation_id)first--;
- useEffect(()=>{toLatest(end.current);player.stop();return()=>player.stop();},[index]);
+ // Don't stop on every turn change: the answer you just gave is still being read out.
+ useEffect(()=>{toLatest(end.current);},[index]);
+ useEffect(()=>()=>player.stop(),[]);
  useEffect(()=>{const pause=()=>{if(document.hidden)player.stop();};document.addEventListener('visibilitychange',pause);return()=>document.removeEventListener('visibilitychange',pause);},[]);
- function next(attempt,snapshot){onChange(p=>finishExercise(snapshot?saveDraft(p,snapshot):p,attempt,lesson));}
+ const justAccepted=useRef(null);
+ function next(attempt,snapshot){if(attempt.outcome==='communicated')justAccepted.current=attempt.id;onChange(p=>finishExercise(snapshot?saveDraft(p,snapshot):p,attempt,lesson));}
  return <div className="lesson-shell conversation-shell">
  <header className="conversation-header"><button className="text-button" onClick={onExit} aria-label="Exit conversation">←</button><div><strong>Al restaurant</strong><span>amb en Caçó</span></div><CassolaMascot size={42}/></header>
  {storageNotice&&<p className="notice" role="status">{storageNotice}</p>}
  <div className="conversation-thread" aria-label="Restaurant conversation">
- {history.map(({exercise,step,submissions},i)=>i>=first&&<ConversationTurn key={exercise.id} exercise={exercise} previous={i>0&&exercises[i-1].situation_id===exercise.situation_id?exercises[i-1]:undefined} lesson={lesson} submissions={submissions}>{!submissions.length&&<p className="chat-instruction" lang="en">{step.outcome==='skipped'?'Previously left for later.':'Earlier reply was not saved.'}</p>}</ConversationTurn>)}
+ {history.map(({exercise,step,submissions},i)=>i>=first&&<ConversationTurn key={exercise.id} exercise={exercise} previous={i>0&&exercises[i-1].situation_id===exercise.situation_id?exercises[i-1]:undefined} lesson={lesson} submissions={submissions} readReply={justAccepted.current===exercise.id}>{!submissions.length&&<p className="chat-instruction" lang="en">{step.outcome==='skipped'?'Previously left for later.':'Earlier reply was not saved.'}</p>}</ConversationTurn>)}
  {between?<div className="chat-ending"><h2>Escena feta!</h2><p lang="en">Next: {lesson.situations.find(s=>s.id===scene).context.en}</p><button className="primary" onClick={()=>setOpen(scene)}>SEGÜENT ESCENA →</button><button className="text-button" onClick={onExit}>Inici / Home</button></div>:index<exercises.length?<Exercise key={exercises[index].id} exercise={exercises[index]} previousExercise={index>first?exercises[index-1]:undefined} lesson={lesson} draft={progress.session.draft} onDraft={draft=>onChange(p=>saveDraft(p,draft))} onFinish={next}/>:<div className="chat-ending"><h2>Fins aviat!</h2><p lang="en">You communicated {attempts.filter(a=>a.outcome==='communicated').length} arrival goals with support. An independent conversation comes later.</p><button className="primary" onClick={()=>{setOpen(exercises[0].situation_id);onChange(p=>({...p,session:newSession()}));}}>TORNEM A PARLAR →</button><button className="text-button" onClick={onExit}>Inici / Home</button></div>}
  <div ref={end}/>
  </div></div>;
