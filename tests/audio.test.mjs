@@ -22,21 +22,31 @@ test('all accepted choices and build permutations have learner audio',()=>{
  assert.equal(clipFor(lesson,{ca:'A nom de Martí'}),manifest.clips['reply-name-1']);
  assert.equal(clipFor(lesson,{ca:'Bona nit, teniu reserva?'}),null);
 });
-function setup(timeout=500){const audios=[];const player=createPlayer(src=>{const a={src,paused:false,play:()=>Promise.resolve(),pause(){this.paused=true;},removeAttribute(){},load(){}};audios.push(a);return a;},timeout);return {player,audios};}
+// Fake Web Audio: a context whose sources the test ends by hand, and a loader per src.
+function fakeContext(){const sources=[];return {sources,state:'running',resume:()=>Promise.resolve(),destination:{},decodeAudioData:(data,ok,no)=>data==='bad'?no(Error('decode')):ok({data}),createBufferSource(){const s={connect(){},disconnect(){},start(){s.started=true;},stop(){s.stopped=true;}};sources.push(s);return s;}};}
+function setup({timeout=500,load=src=>Promise.resolve(src)}={}){const context=fakeContext();const player=createPlayer(()=>context,load,timeout);return {player,sources:context.sources};}
+const tick=()=>new Promise(r=>setTimeout(r,0));
 test('exact text/version maps to actual MP3, changed text/version and unavailable clips do not',()=>{
  for(const [id,clip] of Object.entries(manifest.clips)){assert.ok(clipFor(lesson,{audio_id:id,ca:clip.text}));assert.ok(existsSync(new URL('..'+clip.path,import.meta.url)));assert.equal(readFileSync(new URL('..'+clip.path,import.meta.url)).subarray(0,3).toString(),'ID3');assert.equal(clipFor(lesson,{audio_id:id,ca:clip.text+'!'}),null);assert.equal(clipFor({...lesson,content_version:'new'},{audio_id:id,ca:clip.text}),null);}
  assert.equal(clipFor(lesson,{audio_id:'staff-size',ca:'Quantes persones sou?'}),null);
 });
-test('one clip at a time, replay and end state',()=>{
- const {player,audios}=setup();player.play('a','a.mp3');audios[0].onplaying();assert.equal(player.getState().status,'playing');player.play('b','b.mp3');assert.equal(audios[0].paused,true);audios[1].onplaying();audios[1].onended();assert.equal(player.getState().status,'ended');player.play('b','b.mp3');assert.equal(audios.length,3);player.stop();assert.equal(player.getState().status,'idle');
+test('one clip at a time, replay and end state',async()=>{
+ const {player,sources}=setup();player.play('a','a.mp3');assert.equal(player.getState().status,'loading');await tick();assert.equal(player.getState().status,'playing');
+ player.play('b','b.mp3');assert.equal(sources[0].stopped,true);await tick();sources[1].onended();assert.equal(player.getState().status,'ended');
+ player.play('b','b.mp3');await tick();assert.equal(sources.length,3);player.stop();assert.equal(sources[2].stopped,true);assert.equal(player.getState().status,'idle');
 });
-test('missing media and play rejection report failure without blocking text',async()=>{
- const {player,audios}=setup();player.play('a','missing');audios[0].onerror();assert.equal(player.getState().status,'error');
- const denied=createPlayer(()=>({play:()=>Promise.reject(Error('denied')),pause(){},load(){},removeAttribute(){}}));denied.play('a','a');await Promise.resolve();assert.equal(denied.getState().status,'error');
+test('missing media and undecodable audio report failure without blocking text',async()=>{
+ const missing=setup({load:()=>Promise.reject(Error('404'))});missing.player.play('a','missing');await tick();assert.equal(missing.player.getState().status,'error');
+ const bad=setup({load:()=>Promise.resolve('bad')});bad.player.play('a','bad');await tick();assert.equal(bad.player.getState().status,'error');
+ const blocked=fakeContext();blocked.state='suspended';const denied=createPlayer(()=>blocked,src=>Promise.resolve(src));denied.play('a','a');await tick();assert.equal(denied.getState().status,'error');
 });
-test('late rejection cannot interrupt newer playback',async()=>{
- let reject;const a={play:()=>new Promise((_,r)=>reject=r),pause(){},load(){},removeAttribute(){}};const b={...a,play:()=>Promise.resolve()};let i=0;const player=createPlayer(()=>i++?b:a);player.play('old','a');player.play('new','b');b.onplaying();reject(Error('old'));await Promise.resolve();assert.deepEqual(player.getState(),{key:'new',status:'playing'});player.stop();
+test('a late load cannot interrupt newer playback',async()=>{
+ let resolveOld;const {player,sources}=setup({load:src=>src==='old'?new Promise(r=>resolveOld=r):Promise.resolve(src)});
+ player.play('old','old');player.play('new','new');await tick();assert.deepEqual(player.getState(),{key:'new',status:'playing'});
+ resolveOld('old');await tick();assert.equal(sources.length,1);assert.deepEqual(player.getState(),{key:'new',status:'playing'});player.stop();
 });
-test('loading timeout is recoverable and releases the media',async()=>{
- const {player,audios}=setup(5);player.play('a','a');await new Promise(r=>setTimeout(r,15));assert.equal(player.getState().status,'error');assert.equal(audios[0].paused,true);player.play('a','a');audios[1].onplaying();assert.equal(player.getState().status,'playing');player.stop();
+test('loading timeout is recoverable',async()=>{
+ let hang=true;const {player}=setup({timeout:5,load:src=>hang?new Promise(()=>{}):Promise.resolve(src)});
+ player.play('a','a');await new Promise(r=>setTimeout(r,15));assert.equal(player.getState().status,'error');
+ hang=false;player.play('a','b');await tick();assert.equal(player.getState().status,'playing');player.stop();
 });

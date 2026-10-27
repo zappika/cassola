@@ -1,5 +1,14 @@
 # Cassola handoff
 
+## Learner audio merged and pushed — 2026-10-27
+
+The local learner-audio work was 9 commits behind origin (the live conversation redesign, Web Audio playback, speech-to-text). It was committed on `learner-audio`, merged with origin/main, and pushed to main. Nothing was deployed and no audio was generated.
+
+- Resolution: kept origin's conversation UI, Web Audio player and speech input. Re-applied only the learner audio on top: `clipFor` learner matching in `app/audio.mjs`, and the speaker button on accepted choice/listen-choice/build bubbles in `SentMessages` (`app/main.jsx`), plus its inverted style on the dark learner bubble (`app/lesson.css`). The manifest is ours (a superset of origin's three staff clips).
+- Dropped as superseded: the local `TryAgain` card. Origin's "retry replaces failed reply" flow covers it.
+- `tests/audio.test.mjs` player tests were rewritten for the Web Audio player (fake context and loader). **90 tests pass**; `git diff --check` is clean.
+- Browser (local, desktop): "Si tenim reserva." and the built "A nom de Martí si us plau" both show the speaker button, play and end. Their MP3s return 200, with no console errors. Native listening review is still pending for all 63 learner clips and the 3 staff clips.
+
 ## Learner reply audio complete locally — 2026-10-27
 
 User explicitly selected all 63 clips, including the interpretation answer and every accepted build combination. Generated one take per clip, no retries, using the connected ElevenLabs workflow with Martina `OCsEi4G5LJzKMSZFmYBD`, `eleven_v4`, explicit `language_code: ca`.

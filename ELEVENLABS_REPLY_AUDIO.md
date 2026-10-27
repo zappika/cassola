@@ -1,6 +1,6 @@
 # Task: generate ElevenLabs clips for learner replies
 
-Status: **complete locally** (2026-10-27). All 63 user-approved learner clips are generated and integrated; native listening review is pending. No deployment or push.
+Status: **complete and pushed** (2026-10-27). All 63 user-approved learner clips are generated and integrated; native listening review is pending. Not deployed.
 
 ## Completed batch
 - User confirmed audio for “Si tenim reserva.” and full coverage of all accepted chunk combinations.

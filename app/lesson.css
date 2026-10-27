@@ -29,21 +29,21 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
 
 /* Conversation: persistent turns above a changing reply composer. */
 .lesson-shell.conversation-shell{padding:0 18px 24px;max-width:470px}
-.conversation-header{position:sticky;top:0;z-index:10;background:#FFD23F;display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:2px solid #141210}
+.conversation-header{position:sticky;top:0;z-index:10;background:#FFD23F;display:flex;align-items:center;gap:14px;padding:16px 0}
 .conversation-header .text-button{font-size:24px;text-decoration:none;padding:6px}
 .conversation-header>div{flex:1}.conversation-header strong{display:block;font-size:18px}.conversation-header span{font-size:11px;color:#514726}
 .conversation-thread{padding-top:20px}.conversation-turn{display:flow-root}
-.scene-message{font-size:12px;line-height:1.55;text-align:center;color:#514726;max-width:330px;margin:12px auto 22px;padding:10px 0;border-top:1px solid #14121040;border-bottom:1px solid #14121040}
+.scene-message{font-size:12px;line-height:1.55;text-align:center;color:#514726;max-width:330px;margin:12px auto 22px;padding:10px 0}
 .chat-message{width:fit-content;max-width:88%;padding:13px 16px;margin:12px 0;border:2px solid #141210;line-height:1.45;font-size:18px;overflow-wrap:anywhere}
 .chat-message.waiter{background:#FFF6E0;border-radius:4px 18px 18px 18px;box-shadow:3px 3px #141210}
 .chat-message.learner{margin-left:auto;background:#141210;color:#FFF6E0;border-radius:18px 4px 18px 18px;font-size:16px}
 .chat-message .english{font-size:12px}.delivery{font-size:11px;text-align:right;margin:4px 0 16px;color:#514726}.delivery.delivered{color:#175b38}
 .chat-instruction{font-size:12px;line-height:1.5;color:#514726;margin:16px 0}
 .chat-coaching{font-size:13px;line-height:1.5;margin:10px 0 18px;border-left:2px solid #2840B5;padding-left:10px}.chat-coaching p{margin:0}
-.reply-area{margin:18px 0 4px;border-top:2px solid #141210;padding-top:14px;scroll-margin-top:100px}
+.reply-area{margin:18px 0 4px;scroll-margin-top:100px}
 .composer-label{font-size:11px;font-weight:700;letter-spacing:.5px;margin-bottom:12px}
 .reply-area .choice{font-weight:500;background:#fff6e0b0}.reply-area .primary.send{margin:14px 0 6px;padding:12px}
-.chat-ending{margin-top:24px;border-top:2px solid #141210;padding-top:20px}.chat-ending p{font-size:14px}
+.chat-ending{margin-top:24px}.chat-ending p{font-size:14px}
 
 /* Home invites a conversation; details stay out of the main path. */
 .home-shell{max-width:470px;margin:auto;padding:30px 24px 32px;color:#141210}
@@ -53,7 +53,22 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
 .home-next{margin:30px 0}.home-next-label{font:500 11px 'IBM Plex Mono',monospace;margin-bottom:14px}.home-next-label span{opacity:.65;font-size:10px}.future-scenes{display:flex;gap:10px}.future-scene{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;border:2px solid #141210;border-radius:10px;padding:12px 4px;background:#FFF6E0;font-size:22px;box-shadow:2px 2px #141210}.future-scene>span{font-size:11px;font-weight:700}.future-scene.booking{transform:rotate(-3deg);color:#2840B5}.future-scene.menu{transform:rotate(2deg);color:#1F8A52}.future-scene.bill{transform:rotate(-1deg)}
 .home-footer{border-top:1px solid #14121050;padding-top:10px}.home-footer details{margin-top:10px;font-size:12px}.home-footer summary{cursor:pointer;width:fit-content;color:#514726}.home-footer summary:focus-visible{outline:3px solid #2840B5;outline-offset:4px}.home-footer p{line-height:1.5;margin:12px 0}.home-footer .panel{box-shadow:none;font-size:12px}.home-footer .small{font:inherit}
 @media(max-width:360px){.home-shell{padding:24px 18px}.home-greeting h1{font-size:32px}.home-greeting svg{width:95px}.home-invitation{padding:20px}}
-.audio-control{margin-top:10px}.audio-play{border:0;border-radius:6px;padding:6px 9px;background:#14121010;color:#141210;font:600 12px 'Space Grotesk',sans-serif}.audio-control>span{display:block;font-size:11px;line-height:1.4;margin-top:7px}
-
-.try-again{background:#FFF6E0;border:2.5px solid #141210;border-left:8px solid #E83A2F;border-radius:12px;box-shadow:3px 3px 0 #141210;padding:12px 14px;margin:0 0 16px;font-size:13px;line-height:1.5}.try-again strong{display:block;color:#E83A2F;font-size:15px}.try-again s{display:block;color:#6E6557;font-size:15px;margin:2px 0 6px}.try-again p{margin:0}
-.chat-message.learner .audio-play{background:#FFF6E026;color:#FFF6E0}
+.audio-play{flex:none;display:grid;place-items:center;width:34px;height:34px;border:0;border-radius:99px;padding:0;background:#14121012;color:#141210;cursor:pointer}.audio-play.playing,.audio-play.loading{background:#141210;color:#FFD23F}.audio-control>span{display:block;font-size:11px;line-height:1.4;margin-top:7px}
+.waiter-line{display:flex;gap:10px;align-items:flex-start}.waiter-line>span{padding-top:4px}.conversation-turn>*{animation:bubble-in .3s ease-out}@keyframes bubble-in{from{opacity:0;transform:translateY(6px)}}@media (prefers-reduced-motion:reduce){.conversation-turn>*{animation:none}}
+/* Conversation fills exactly one screen: header on top, thread scrolls, reply pinned at the bottom. */
+.lesson-shell.conversation-shell{height:100vh;height:100dvh;min-height:0;display:flex;flex-direction:column;overflow:hidden;padding-bottom:0}
+.conversation-shell>.conversation-header{position:static;flex:none}
+.conversation-thread{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;position:relative;display:flex;flex-direction:column;padding-bottom:12px;-webkit-overflow-scrolling:touch}
+.reply-area{position:sticky;bottom:0;z-index:5;background:#FFD23F;margin-bottom:0;padding:12px 0 calc(12px + env(safe-area-inset-bottom));box-shadow:0 -14px 14px -10px #FFD23F}
+.thread-spacer{flex:none}
+.scene-break{margin:36px 0 18px;padding:14px 16px;border:2px dashed #141210;border-radius:12px;font-size:14px;line-height:1.5;text-align:center}.scene-break .kicker{font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.08em;margin-bottom:6px}
+.chat-message.learner.failed{background:transparent;color:#141210;border-style:dashed;opacity:.7}
+.speech{display:flex;flex-direction:column;align-items:center;gap:12px}
+.speech-transcript{align-self:stretch;min-height:56px;padding:14px 16px;border:2px dashed #141210;border-radius:12px;font-size:17px;line-height:1.4;text-align:center}
+.speech-transcript.empty{font-size:13px;color:#514726}
+.mic{width:68px;height:68px;border-radius:99px;border:2.5px solid #141210;background:#FFF6E0;color:#141210;display:grid;place-items:center;box-shadow:3px 3px #141210;cursor:pointer}
+.mic.listening{background:#E83A2F;color:#FFF6E0;animation:mic-pulse 1.2s ease-in-out infinite}
+@keyframes mic-pulse{50%{box-shadow:3px 3px #141210,0 0 0 10px #E83A2F33}}
+.speech-error{font-size:12px;margin:0;text-align:center}
+/* Learner bubbles are ink-dark, so their speaker button inverts the waiter's. */
+.chat-message.learner .audio-play{background:#FFF6E026;color:#FFF6E0}.chat-message.learner .audio-play.playing,.chat-message.learner .audio-play.loading{background:#FFD23F;color:#141210}
