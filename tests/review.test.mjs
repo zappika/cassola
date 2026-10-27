@@ -2,10 +2,20 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {catalog,validateSubmission,appendReview,makeSession,sessionId} from '../lib/review-service.mjs';
 import {sectionStatus,latestReviews} from '../review/catalog.mjs';
+import audioTrial from '../content/audio-trial.mjs';
 const s=catalog[0];
 const input={sectionId:s.id,revision:s.revision,name:'Núria',status:'approved',comment:'',requestId:'12345678-1234-1234-1234-123456789012'};
+test('every learner recording has a generation-specific listening review',()=>{
+ const clips=Object.entries(audioTrial.clips).filter(([,c])=>c.role==='learner');
+ assert.equal(clips.length,63);
+ for(const [id,clip] of clips){
+  const section=catalog.find(s=>s.id==='voice-trial-'+id);
+  assert.ok(section,id);assert.equal(section.rows[0].audio,clip.path);assert.equal(section.rows[0].generation_id,clip.generation_id);
+  assert.equal(sectionStatus([],section),'pending');
+ }
+});
 test('catalog includes all guided exercises, all branches and every rule fixture',()=>{
- assert.equal(catalog.length,23);assert.equal(new Set(catalog.map(s=>s.id)).size,23);
+ assert.equal(catalog.length,89);assert.equal(new Set(catalog.map(s=>s.id)).size,89);
  for(const s of catalog){assert.ok(s.rows.length);assert.match(s.revision,/^[0-9a-f]{20}$/);assert.ok(!JSON.stringify(s.rows).includes('{party_size_word}'));}
  assert.ok(catalog.find(s=>s.id==='answers-confirm-booking').rows.some(r=>r.ca==='Tinc una taula reservada.'&&r.note==='Accept'));
 });

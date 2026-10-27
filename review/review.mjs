@@ -30,9 +30,11 @@ function renderNotes(){
 }
 function select(s){
  if(saving)return;
+ document.querySelectorAll('audio').forEach(a=>a.pause());
+ $('review-scope').textContent=s.rows.some(r=>r.audio)?'Listen to the whole clip. “Looks good” confirms its wording, Catalan pronunciation, accent and pace. Save a draft if you have only checked part.':'“Looks good” confirms all wording shown above. Save a draft if you have only checked part. Audio is reviewed separately under Voice trial.';
  active=s;storageSet('cassola-review-last-section',s.id);
  $('section-group').textContent=s.group;$('section-title').textContent=s.title;
- $('wording').replaceChildren(...s.rows.map(r=>{const wrap=text('div','','word-row');wrap.append(text('div',r.label,'row-label'));const body=text('div','');const ca=text('div',r.ca||'','catalan');ca.lang='ca';body.append(ca);if(r.en)body.append(text('div',r.en,'english'));if(r.note)body.append(text('div',r.note,'note'));wrap.append(body);return wrap;}));
+ $('wording').replaceChildren(...s.rows.map(r=>{const wrap=text('div','','word-row');wrap.append(text('div',r.label,'row-label'));const body=text('div','');const ca=text('div',r.ca||'','catalan');ca.lang='ca';body.append(ca);if(r.en)body.append(text('div',r.en,'english'));if(r.audio?.startsWith('/audio/trial/')){const audio=document.createElement('audio');audio.controls=true;audio.preload='none';audio.src=r.audio;audio.setAttribute('aria-label',r.ca);body.append(audio);}if(r.note)body.append(text('div',r.note,'note'));wrap.append(body);return wrap;}));
  let draft;try{draft=JSON.parse(storageGet(draftKey(),'null'));}catch{}
  const own=latestReviews(data.reviews,s).find(r=>r.reviewerId===data.reviewerId);
  $('comment').value=draft?.comment??own?.comment??'';

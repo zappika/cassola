@@ -8,7 +8,7 @@ Draft, 2026-10-15. All Catalan and translations await native-speaker review. Sta
 
 A situation's `facts` are learner-visible ground truth, **not automatically known to staff**. Resolve `$name` and `$party_size` from that situation. Braced values in accepted examples are display templates; number words come from `party_size_word`. The final exercise's situation/rule defaults are overridden by the selected branch/current node. Do not start every final attempt with the default reservation facts.
 
-Each exercise references a rule containing its goal, required details, accepted examples, hint, model audio and review status. Staff lines carry their own audio reference. Teaching notes appear at the specified point during guided practice; optional model playback and hints provide instruction before unsupported production. Final attempts have no model responses or chunk bank. Optional context English remains available and does not reveal an answer; staff translations, answer hints and models count as assistance. Transcripts are an accessibility alternative; record text/listening modality rather than claiming listening ability from reading.
+Each exercise references a rule containing its goal, required details, accepted examples, hint, model audio and review status. Staff lines carry their own audio reference. The October 17 UI revision hides teaching-note panels and standalone hint/example controls. Underlined phrases provide contextual meanings; checking reveals English and failed typed/build attempts can show a suggested phrase. Audio model playback remains pending. Final attempts have no model responses or chunk bank. Optional context English remains available and does not reveal an answer; staff translations, answer hints and models count as assistance. Transcripts are an accessibility alternative; record text/listening modality rather than claiming listening ability from reading.
 
 ## Decision order
 
@@ -28,7 +28,7 @@ Normalize Unicode, case, surrounding/repeated spaces, typographic apostrophes an
 - Walk-in choice: a no-booking statement plus availability request succeeds even without party size; staff then ask for it. A no-booking statement alone misses the availability request, not “naturalness”. In the typing task, requesting a table **and** size are explicit goals. A polite request such as “Voldríem una taula…” counts as an availability request even without a question mark.
 - Late arrival: an apology in response to the staff's lateness statement acknowledges lateness. An explanation can be long; it only needs a table-availability question to meet the combined goal. An apology alone is incomplete, not culturally wrong.
 - Chunks: shuffle by stable ID once per attempt; allow undo. Listed sequences are examples, not exhaustive permutations. Assess the assembled meaning through the same rule; optional polite chunks and valid order changes must work. A name alone answers “A quin nom?”.
-- Choice outcomes are authoring metadata. Hide outcomes and all evaluative styling until submission, and shuffle choices. More than one option may communicate successfully. English choices are optional help, not permanently visible labels.
+- Choice outcomes are authoring metadata. Hide outcomes and all evaluative styling until submission, and shuffle choices. More than one option may communicate successfully. English for the selected choice appears after checking, not as a permanent label. Underlined phrases provide optional meanings before checking.
 
 ## Scripted exchange and honest progress
 
@@ -49,3 +49,11 @@ Required native review: prompts/context; all accepted and contrasting replies; t
 ## Saved progress (Stage 3B)
 
 `app/progress.mjs` stores learner progress under `cassola.walking-in.progress.v1`, independently of native reviews. It retains the active exercise (including shuffle, answer, help, partial facts and feedback), submission outcomes and completed-step records. Unique communicated goals never inflate across repeat runs. Guided evidence is `practised_with_help`; no independent or spoken credit is available. Revisit is computed 24 hours after the last attempted/communicated finished exercise, preserving evidence. Content-version changes start fresh and retain older evidence separately. Reset removes only this learner key; blocked storage produces an explicit warning. This is browser-local storage, not cross-device or multi-tab synchronization. Run `npm run test:progress` for persistence checks.
+
+## Exercise UI revision (2026-10-17, local)
+
+Staff/answer word lookups count as assistance before success; situation/goal lookups do not. Post-check English does not retroactively mark a successful response assisted. A failed response already counts as correction assistance. Existing progress flags remain readable; the skip control is removed but historical skipped records remain valid. Native review includes the new glossary in Other wording.
+
+## Conversation presentation (2026-10-17, local)
+
+The guided sequence is now a persistent chat thread. Choice/chunk/text composers prepare replies; ENVIA commits a submission. Successful sends atomically save the reply and finish that guided turn, with Missatge comunicat shown only in sent history. Retries stay in the same thread and compatible partial details carry forward as before. Scene notes mark situation changes. This is presentation of the existing supported sequence, not the independent scripted branches or an open-ended agent.

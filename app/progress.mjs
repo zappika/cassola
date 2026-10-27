@@ -12,7 +12,7 @@ export function freshProgress(lesson){
 export function newSession(){return {finished:[],draft:null};}
 export function makeDraft(exercise,order){return {id:exercise.id,order:order.map(x=>x.id),picked:null,chunks:[],answer:'',english:false,hint:false,model:false,result:null,previous:{},assisted:false,submissions:[]};}
 function validResult(r){return r===null||(object(r)&&outcomes.includes(r.outcome)&&Array.isArray(r.missing_details)&&r.missing_details.every(x=>typeof x==='string')&&object(r.details)&&Array.isArray(r.style_notes));}
-function validSubmission(s){return object(s)&&outcomes.includes(s.outcome)&&time(s.at)&&typeof s.input==='string'&&s.input.length<=1000&&typeof s.assisted==='boolean';}
+function validSubmission(s){return object(s)&&outcomes.includes(s.outcome)&&time(s.at)&&typeof s.input==='string'&&s.input.length<=1000&&typeof s.assisted==='boolean'&&(s.translation===undefined||typeof s.translation==='string')&&(s.missing===undefined||(Array.isArray(s.missing)&&s.missing.every(k=>typeof k==='string')));}
 function validDraft(d,e){
  const ids=(e.options||e.chunks||[]).map(x=>x.id);
  return object(d)&&d.id===e.id&&Array.isArray(d.order)&&d.order.length===ids.length&&new Set(d.order).size===ids.length&&d.order.every(x=>ids.includes(x))&&

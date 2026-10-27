@@ -9,7 +9,7 @@ let events=[];try{events=JSON.parse(await readFile(file,'utf8'));}catch{}
 let revision=0;
 const store={read:async()=>({events:[...events],etag:revision}),write:async(next,etag)=>{if(etag!==revision)throw Object.assign(Error('conflict'),{conflict:true});events=next;revision++;await writeFile(file,JSON.stringify(events));}};
 const handler=createHandler({store,secret:'local-review',secureCookies:false});
-const types={'.html':'text/html','.css':'text/css','.mjs':'text/javascript','.json':'application/json','.svg':'image/svg+xml','.png':'image/png'};
+const types={'.mp3':'audio/mpeg','.html':'text/html','.css':'text/css','.mjs':'text/javascript','.json':'application/json','.svg':'image/svg+xml','.png':'image/png'};
 http.createServer(async(req,res)=>{
  try{
   if(req.url==='/api/reviews'){

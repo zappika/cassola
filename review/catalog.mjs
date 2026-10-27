@@ -1,3 +1,5 @@
+import audioTrial from '../content/audio-trial.mjs';
+import {glosses} from '../app/language-help.mjs';
 const labels = {communicated:'Accept',needs_information:'Ask for missing information',different_meaning:'Meaning does not fit',uncertain:'Ask for clarification'};
 const detailLabels={question_topic:'what the question is about',reservation:'reservation status',name:'booking name',availability_request:'asking for a table',party_size:'party size',repeat_request:'request to repeat',late_acknowledgement:'acknowledging lateness',table_still_available_request:'asking whether the table is still available',accept_seating:'responding to the invitation'};
 const detailNames=keys=>keys.map(k=>detailLabels[k]||k).join(', ');
@@ -47,9 +49,14 @@ export function buildSections(lesson, fixtures) {
     ...Object.entries(lesson.feedback).filter(([k])=>k!=='missing_details').map(([k,v])=>row(labels[k],v)),
     ...Object.entries(lesson.feedback.missing_details).map(([k,v])=>row('Missing: '+detailLabels[k],v)),
     ...Object.entries(lesson.completion_copy).map(([k,v])=>row(k,v)),
-    ...lesson.answer_rules.map(r=>row('Hint',r.hint))
+    ...lesson.answer_rules.map(r=>row('Hint',r.hint)),
+    ...glosses.map(([ca,en])=>row('Tap / hover meaning',{ca,en},'Draft inline English help; check meaning in this restaurant context.'))
   ]);
   add('audio-scripts','Other wording','Audio scripts — text only',Object.entries(lesson.audio).map(([id,a])=>row(id,a.text,'Audio has not been generated. Approval here covers wording only.')));
+  for(const [id,clip] of Object.entries(audioTrial.clips)){
+    if(audioTrial.lesson_version!==lesson.content_version||(clip.role!=='learner'&&lesson.audio[id]?.text!==clip.text))continue;
+    add('voice-trial-'+id,'Voice trial',clip.text,[{label:'Listen and review',ca:clip.text,audio:clip.path,note:'Martina · Eleven v4. Check Catalan pronunciation, accent, pace, stress and exact wording. This approval covers this specific trial clip.',generation_id:clip.generation_id}]);
+  }
   return sections;
 }
 function fill(text,facts){return text.replace(/\{(\w+)\}/g,(_,key)=>facts[key]??`{${key}}`);}
